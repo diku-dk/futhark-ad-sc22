@@ -30,10 +30,10 @@ $(PY_RESULTS): lstm.py data
 $(FUT_RESULTS): lstm.fut data
 	$(FUTHARK) bench $^ $(FUTHARK_TUNING) $(FUTHARK_BENCH_OPTIONS) -r $(FUTHARK_BENCH_RUNS) --backend=$(FUTHARK_BACKEND) --json $@
 
-results: lstm_py.json lstm_fut.json
+results: $(PY_RESULTS) $(FUT_RESULTS) 
 	python3 -c 'import process; process.dump("$(PY_RESULTS)", "$(FUT_RESULTS)", "$(RESULTS)")'
 
-latex: lstm_py.json lstm_fut.json
+latex: $(PY_RESULTS) $(FUT_RESULTS) 
 	python3 -c 'import process; process.latex("$(PY_RESULTS)", "$(FUT_RESULTS)", "$(LATEX_TABLE)")'
 
 .PHONY: clean
