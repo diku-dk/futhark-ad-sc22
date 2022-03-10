@@ -7,17 +7,17 @@ DATA_DIR=data
 PY_RESULTS=lstm_py.json
 FUT_RESULTS=lstm_fut.json
 RESULTS=results.json
-LATEX_TABLE=results.tex
-PRECISION=f32
 
 ifeq ($(shell if lshw -C display 2>/dev/null | grep -q 'A100'; then echo yes; fi),yes)
 	FUTHARK_TUNING=--tuning=.tuning.a100
 	FUTHARK_TILE_SIZE=4
 	FUTHARK_REG_TILE=4
+        PRECISION=f64
 else
 	FUTHARK_TUNING=--tuning=.tuning.2080ti
 	FUTHARK_TILE_SIZE=4
 	FUTHARK_REG_TILE=4
+        PRECISION=f32
 endif
 
 data:
@@ -34,7 +34,7 @@ results: $(PY_RESULTS) $(FUT_RESULTS)
 	python3 -c 'import process; process.dump("$(PY_RESULTS)", "$(FUT_RESULTS)", "$(RESULTS)")'
 
 latex: $(PY_RESULTS) $(FUT_RESULTS) 
-	python3 -c 'import process; process.latex("$(PY_RESULTS)", "$(FUT_RESULTS)", "$(LATEX_TABLE)")'
+	@python3 -c 'import process; process.latex("$(PY_RESULTS)", "$(FUT_RESULTS)")'
 
 .PHONY: clean
 
