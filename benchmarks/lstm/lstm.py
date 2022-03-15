@@ -44,8 +44,8 @@ def gen_data(parameters = parameters, data_dir="data", prec="f32"):
     filename = gen_filename(*params, data_dir)
     torchLSTM = RNNLSTM(*params, filename, tensors=None, runs=None)
     torchLSTM.gen_data()
-    print("Data generated!")
-    return
+  print("Data generated!")
+  return
 
 def benchmarks(parameters = parameters, runs=10, validate=False, output="lstm_py.json", data_dir="data", prec="f32"):
   set_precision(prec)
@@ -87,6 +87,7 @@ class NaiveLSTM(nn.Module, Benchmark):
       self.activation_j = activation_j()
       self.tensors = tensors
       self.runs = runs
+      self.kind = "pytorch"
 
   def prepare(self):
       self.input_ = self.tensors['input']
@@ -199,6 +200,7 @@ class RNNLSTM(nn.Module, Benchmark):
     self.filename = filename
     self.tensors = tensors
     self.runs = runs
+    self.kind = "pytorch"
 
   def prepare(self):
     if self.tensors is None:
@@ -279,3 +281,4 @@ class RNNLSTM(nn.Module, Benchmark):
     self.calculate_objective()
     self.calculate_jacobian()
     self.dump_inputs()
+    self.dump()

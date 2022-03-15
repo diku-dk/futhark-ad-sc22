@@ -28,13 +28,15 @@ $(PY_RESULTS): lstm.py data
 	python3 -c 'import lstm; lstm.benchmarks(runs=$(FUTHARK_BENCH_RUNS), data_dir="$(DATA_DIR)", output="$(PY_RESULTS)", prec="$(PRECISION)")'
 
 $(FUT_RESULTS): lstm.fut data
+	@sed -E -r 's/f64|f32/$(PRECISION)/' $<
 	$(FUTHARK) bench $^ $(FUTHARK_TUNING) $(FUTHARK_BENCH_OPTIONS) -r $(FUTHARK_BENCH_RUNS) --backend=$(FUTHARK_BACKEND) --json $@
+	python3 -c 'import benchmark; benchmark.process_futhark("$(FUT_RESULTS)")'
 
 results: $(PY_RESULTS) $(FUT_RESULTS) 
-	python3 -c 'import process; process.dump("$(PY_RESULTS)", "$(FUT_RESULTS)", "$(RESULTS)")'
+	python3 -c 'import benchmark; benchmark.dump(["$(PY_RESULTS)", "$(FUT_RESULTS)"], "$(RESULTS)")'
 
 latex: $(PY_RESULTS) $(FUT_RESULTS) 
-	@python3 -c 'import process; process.latex("$(PY_RESULTS)", "$(FUT_RESULTS)")'
+	@python3 -c 'import benchmark; benchmark.latex_lstm("$(PY_RESULTS)", "$(FUT_RESULTS)")'
 
 .PHONY: clean
 
