@@ -1,0 +1,5 @@
+torch
+futhark-data
+
+# package location
+# --find-links https://download.pytorch.org/whl/cu112/torch_stable.html

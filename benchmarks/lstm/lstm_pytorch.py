@@ -47,7 +47,7 @@ def gen_data(parameters = parameters, data_dir="data", prec="f32"):
   print("Data generated!")
   return
 
-def benchmarks(parameters = parameters, runs=10, validate=False, output="lstm_py.json", data_dir="data", prec="f32"):
+def benchmarks(parameters = parameters, runs=10, validate=False, output="lstm_pytorch.json", data_dir="data", prec="f32"):
   set_precision(prec)
   times = {}
   for params in parameters:
