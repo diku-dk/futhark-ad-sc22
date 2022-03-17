@@ -1,6 +1,6 @@
 from collections import namedtuple
 
-from jax import numpy as jnp, vmap, vjp
+from jax import numpy as jnp, vmap, vjp, tree_map
 from jax.lax import scan
 from jax.nn import sigmoid, tanh
 from jax.random import normal, split, PRNGKey
@@ -28,7 +28,7 @@ def benchmarks(parameters = parameters, runs=10, validate=False, output="lstm_ja
     lstm.benchmark()
     #if validate and not equal(torchLSTM, naiveLSTM):
     #  sys.exit("Error: {filename} does not validate.")
-    times[filename] = { self.kind : lstm.report(),
+    times[filename] = { lstm.kind : lstm.report(),
                       }
   with open(output,'w') as f:
     json.dump(times, f, indent=2)
@@ -36,11 +36,11 @@ def benchmarks(parameters = parameters, runs=10, validate=False, output="lstm_ja
   return
 
 class LSTM(Benchmark):
-    def __init__(self, tensors, runs, hid_dim=5, num_layers=2):
+    def __init__(self, tensors, runs, hid_dim=5):
         self.runs = runs
         self.kind = "jax"
         self.tensors = tensors
-        _, self.run = rnn(hid_dim=hid_dim, num_layers=num_layers)
+        _, self.run = rnn(hid_dim=hid_dim, num_layers=1)
 
     def prepare(self):
         self.xs = self.tensors['input']
@@ -58,19 +58,18 @@ class LSTM(Benchmark):
              tuple(jnp.split(self.tensors['bias_hh_l0'], 4))
 
         bias = tuple(map(sum, zip(in_bias, hid_bias)))
-
-        self.weights = LSTM_WEIGHTS(*in_weights, *hid_weights, *bias)
-        h_0 = self.tensors['hidn_st0'][0] # (1024, 300)
-        c_0 = self.tensors['cell_st0'][0]
-        self.init_state = (h_0, c_0)
+        h_0 = self.tensors['hidn_st0']
+        c_0 = self.tensors['cell_st0']
+        self.weights = [LSTM_WEIGHTS(*in_weights, *hid_weights, *bias)]
+        self.init_state = jnp.swapaxes(jnp.array([h_0, c_0]), 0, 1)
         self.w_y = jnp.transpose(self.tensors['weight'])
         self.b_y = self.tensors['bias']
 
     def calculate_objective(self):
-       _, self.objective = self.run(self.xs, self.init_state, self.weights)
+       _, self.objective = tree_map(lambda x: x.block_until_ready(), self.run(self.xs, self.init_state, self.weights))
 
     def calculate_jacobian(self):
-       _, self.jacobian = vjp(lambda weights: self.run(self.xs, self.init_state, weights), self.weights)
+       _, self.jacobian = tree_map(lambda x: x.block_until_ready(), vjp(lambda weights: self.run(self.xs, self.init_state, weights), self.weights))
 
 def _lstm_cell(state, weights: LSTM_WEIGHTS, input):
     h, c = state
@@ -112,7 +111,8 @@ def rnn(hid_dim=5, num_layers=2):
         return (jnp.stack(out_state), weights), h
 
     def run_vmap(xs, init_state, weights):
-        return vmap(lambda x: scan(_cell, (init_state, weights), x), in_axes=1, out_axes=1)(xs)
+        #init_state = jnp.repeat(jnp.expand_dims(init_state,2), xs.shape[1], axis=2)
+        return scan(_cell, (init_state, weights), xs)
 
     return init, run_vmap
 
@@ -120,7 +120,7 @@ if __name__ == '__main__':
     rng_seed = PRNGKey(43)
     hid_dim = 5
     in_dim = 2
-    num_layers = 3
+    num_layers = 1
     lengths = 4
     num_datum = 6
     data_seed, init_seed = split(rng_seed)

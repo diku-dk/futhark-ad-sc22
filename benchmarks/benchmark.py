@@ -28,7 +28,7 @@ class Benchmark(ABC):
       start = torch.cuda.Event(enable_timing=True)
       end   = torch.cuda.Event(enable_timing=True)
       start.record()
-      for i in range(self.runs):
+      for i in range(self.runs + 1):
         start.record()
         f()
         torch.cuda.synchronize()
@@ -36,7 +36,7 @@ class Benchmark(ABC):
         torch.cuda.synchronize()
         timings[i] = start.elapsed_time(end)*1000
     elif self.kind is "jax":
-      for i in range(self.runs):
+      for i in range(self.runs + 1):
           start = time_ns()
           f()
           timings[i] = (time_ns() - start)/1000
