@@ -10,7 +10,7 @@ import json
 from lstm_pytorch import (gen_filename, parameters)
 
 LSTM_WEIGHTS = namedtuple('LSTM_WEIGHTS', ('w_ii', 'w_if', 'w_ig', 'w_io', 'w_hi', 'w_hf', 'w_hg', 'w_ho',
-                                           'bi', 'bf', 'bg', 'bo'))
+                                           'bi', 'bf', 'bg', 'bo', 'w_out', 'b_out'))
 
 def read_tensors(filename):
   with open(filename + ".json",'r') as f:
@@ -45,25 +45,15 @@ class LSTM(Benchmark):
     def prepare(self):
         self.xs = self.tensors['input']
         self.target = self.tensors['target']
-        in_weights = \
-             tuple(jnp.transpose(t) for t in jnp.split(self.tensors['weight_ih_l0'], 4))
-
-        hid_weights  = \
-             tuple(jnp.transpose(t) for t in jnp.split(self.tensors['weight_hh_l0'], 4))
-
-        in_bias = \
-             tuple(jnp.split(self.tensors['bias_ih_l0'], 4))
-
-        hid_bias = \
-             tuple(jnp.split(self.tensors['bias_hh_l0'], 4))
-
+        in_weights = tuple(jnp.transpose(t) for t in jnp.split(self.tensors['weight_ih_l0'], 4))
+        hid_weights = tuple(jnp.transpose(t) for t in jnp.split(self.tensors['weight_hh_l0'], 4))
+        in_bias = tuple(jnp.split(self.tensors['bias_ih_l0'], 4))
+        hid_bias = tuple(jnp.split(self.tensors['bias_hh_l0'], 4))
         bias = tuple(map(sum, zip(in_bias, hid_bias)))
         h_0 = self.tensors['hidn_st0']
         c_0 = self.tensors['cell_st0']
-        self.weights = [LSTM_WEIGHTS(*in_weights, *hid_weights, *bias)]
+        self.weights = [LSTM_WEIGHTS(*in_weights, *hid_weights, *bias, jnp.transpose(self.tensors['weight']), self.tensors['bias'])]
         self.init_state = jnp.swapaxes(jnp.array([h_0, c_0]), 0, 1)
-        self.w_y = jnp.transpose(self.tensors['weight'])
-        self.b_y = self.tensors['bias']
 
     def calculate_objective(self):
        _, self.objective = tree_map(lambda x: x.block_until_ready(), self.run(self.xs, self.init_state, self.weights))
@@ -112,7 +102,12 @@ def rnn(hid_dim=5, num_layers=2):
 
     def run_vmap(xs, init_state, weights):
         #init_state = jnp.repeat(jnp.expand_dims(init_state,2), xs.shape[1], axis=2)
-        return scan(_cell, (init_state, weights), xs)
+        new_state, y_hat = scan(_cell, (init_state, weights), xs)
+        batch_size, steps, _ = y_hat.shape
+        jnp.reshape(y_hat, (batch_size * steps, -1))
+        y_hat = jnp.matmul(y_hat, weights[-1].w_out) + weights[-1].b_out
+        jnp.reshape(y_hat, (batch_size, steps, -1))
+        return new_state, y_hat 
 
     return init, run_vmap
 
