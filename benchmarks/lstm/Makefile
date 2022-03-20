@@ -8,7 +8,7 @@ ifeq ($(shell if lshw -C display 2>/dev/null | grep -q 'A100'; then echo yes; fi
         PRECISION=f64
 else
 	FUTHARK_TUNING=--tuning=.tuning.2080ti
-	FUTHARK_TILE_SIZE=4
+	FUTHARK_TILE_SIZE=16
 	FUTHARK_REG_TILE=4
         PRECISION=f32
 endif

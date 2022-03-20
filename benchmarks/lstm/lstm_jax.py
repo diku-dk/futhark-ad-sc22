@@ -28,8 +28,7 @@ def benchmarks(parameters = parameters, runs=10, validate=False, output="lstm_ja
     lstm.benchmark()
     #if validate and not equal(torchLSTM, naiveLSTM):
     #  sys.exit("Error: {filename} does not validate.")
-    times[filename] = { lstm.kind : lstm.report(),
-                      }
+    times[filename] = { lstm.kind : lstm.report() }
   with open(output,'w') as f:
     json.dump(times, f, indent=2)
   print("Benchmarks output to: " + output)
@@ -56,10 +55,11 @@ class LSTM(Benchmark):
         self.init_state = jnp.swapaxes(jnp.array([h_0, c_0]), 0, 1)
 
     def calculate_objective(self):
-       _, self.objective = tree_map(lambda x: x.block_until_ready(), self.run(self.xs, self.init_state, self.weights))
+       self.objective = self.run(self.xs, self.init_state, self.weights)[1].block_until_ready()
 
     def calculate_jacobian(self):
-       _, self.jacobian = tree_map(lambda x: x.block_until_ready(), vjp(lambda weights: self.run(self.xs, self.init_state, weights), self.weights))
+       primals, run_vjp = vjp(lambda weights: self.run(self.xs, self.init_state, weights), self.weights)
+       self.jacobian = tree_map(lambda x: x.block_until_ready(), run_vjp(primals)[0][0])
 
 def _lstm_cell(state, weights: LSTM_WEIGHTS, input):
     h, c = state
@@ -113,11 +113,11 @@ def rnn(hid_dim=5, num_layers=2):
 
 if __name__ == '__main__':
     rng_seed = PRNGKey(43)
-    hid_dim = 5
-    in_dim = 2
+    hid_dim = 192
+    in_dim = 300
     num_layers = 1
-    lengths = 4
-    num_datum = 6
+    lengths = 20
+    num_datum = 1024
     data_seed, init_seed = split(rng_seed)
 
     xs = normal(data_seed, (lengths, num_datum, in_dim))  # time-major
