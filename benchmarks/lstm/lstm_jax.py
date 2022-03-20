@@ -1,10 +1,12 @@
 from collections import namedtuple
 
-from jax import numpy as jnp, vmap, vjp, tree_map
+from jax import numpy as jnp, vmap, vjp, tree_map, block_until_ready, jit
 from jax.lax import scan
 from jax.nn import sigmoid, tanh
 from jax.random import normal, split, PRNGKey
 
+import numpy as np
+from time import time_ns
 from benchmark import (Benchmark, set_precision)
 import json
 from lstm_pytorch import (gen_filename, parameters)
@@ -40,6 +42,7 @@ class LSTM(Benchmark):
         self.kind = "jax"
         self.tensors = tensors
         _, self.run = rnn(hid_dim=hid_dim, num_layers=1)
+        self.hid_dim = hid_dim
 
     def prepare(self):
         self.xs = self.tensors['input']
@@ -54,12 +57,29 @@ class LSTM(Benchmark):
         self.weights = [LSTM_WEIGHTS(*in_weights, *hid_weights, *bias, jnp.transpose(self.tensors['weight']), self.tensors['bias'])]
         self.init_state = jnp.swapaxes(jnp.array([h_0, c_0]), 0, 1)
 
-    def calculate_objective(self):
-       self.objective = self.run(self.xs, self.init_state, self.weights)[1].block_until_ready()
+    def calculate_objective(self, runs):
+      timings = np.zeros(runs + 1)
+      for i in range(runs + 1):
+          start = time_ns()
+          _, self.objective = block_until_ready(self.run(self.xs, self.init_state, self.weights))
+          timings[i] = (time_ns() - start)/1000
+      return timings
 
-    def calculate_jacobian(self):
-       primals, run_vjp = vjp(lambda weights: self.run(self.xs, self.init_state, weights), self.weights)
-       self.jacobian = tree_map(lambda x: x.block_until_ready(), run_vjp(primals)[0][0])
+    def calculate_jacobian(self, runs):
+        run = lambda weights: self.run(self.xs, self.init_state, weights)
+
+        @jit
+        def _vjp(x):
+            primals, vjp_fn = vjp(run, x)
+            return vjp_fn(primals)
+
+        timings = np.zeros(runs + 1)
+        for i in range(runs + 1):
+          start = time_ns()
+          block_until_ready(_vjp(self.weights))
+          timings[i] = (time_ns() - start)/1000
+
+        return timings
 
 def _lstm_cell(state, weights: LSTM_WEIGHTS, input):
     h, c = state

@@ -23,8 +23,8 @@ class Benchmark(ABC):
       ...
 
   def time_fun(self, f):
-    timings = np.zeros((self.runs +1 ,))
     if self.kind is "pytorch" or None:
+      timings = np.zeros((self.runs +1 ,))
       start = torch.cuda.Event(enable_timing=True)
       end   = torch.cuda.Event(enable_timing=True)
       start.record()
@@ -36,17 +36,16 @@ class Benchmark(ABC):
         torch.cuda.synchronize()
         timings[i] = start.elapsed_time(end)*1000
     elif self.kind is "jax":
-      for i in range(self.runs + 1):
-          start = time_ns()
-          f()
-          timings[i] = (time_ns() - start)/1000
+        timings = f(self.runs)
     return float(timings[1:].mean()), float(timings[1:].std())
 
   def time_objective(self):
       self.objective_time, self.objective_std = self.time_fun(self.calculate_objective)
+      print(self.objective_time)
 
   def time_jacobian(self):
       self.jacobian_time, self.jacobian_std = self.time_fun(self.calculate_jacobian)
+      print(self.jacobian_time)
 
   def benchmark(self):
     self.prepare()
