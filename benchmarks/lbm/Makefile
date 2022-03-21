@@ -10,4 +10,4 @@ clean:
 	rm -f $(NAME).json
 
 $(NAME).json: $(NAME).fut
-	$(FUTHARK) bench --backend=$(FUTHARK_BACKEND) --runs=$(RUNS) lbm.fut --json $@ $<
+	$(FUTHARK) bench --backend=$(FUTHARK_BACKEND) --runs=$(RUNS) --json $@ $<
