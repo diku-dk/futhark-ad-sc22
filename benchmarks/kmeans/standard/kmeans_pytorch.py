@@ -43,11 +43,10 @@ def benchmarks(datasets = ["kdd_cup", "random"], runs=10, output="kmeans_pytorch
     kmeans = KMeans(data, runs, "cuda")
     kmeans.benchmark()
     kmeans.validate()
-    times['data/' + data] = { 'pytorch' : 
-                            { 'objective': kmeans.objective_time,
-                              'objective_std': kmeans.objective_std,
+    times['data/' + data] = { 'pytorch' : { 'objective': kmeans.objective_time,
+                                            'objective_std': kmeans.objective_std
+                                          }
                             }
-                  }
   with open(output,'w') as f:
     json.dump(times, f, indent=2)
   print("Benchmarks output to: " + output)
@@ -59,12 +58,10 @@ def all_pairs_norm(a, b):
     diff = torch.matmul(b, a.T)
     return a_sqr + b_sqr - 2 * diff
 
-
 def cost(points, centers):
     dists = all_pairs_norm(points, centers)
     (min_dist,_) = torch.min(dists, dim=0)
     return min_dist.sum()
-
 
 def kmeans(_, k, max_iter, features, tolerance=1):
 

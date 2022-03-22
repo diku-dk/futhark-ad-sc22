@@ -1,4 +1,5 @@
 -- AD version of sparse-kmeans for k=10
+
 -- ==
 -- entry: calculate_objective
 -- compiled input @ data/movielens.in.gz output @ data/movielens.out
@@ -7,7 +8,7 @@
 
 import "kmeans_sparse"
 
-let calculate_objective [nnz][np1] 
+entry calculate_objective [nnz][np1] 
          (values: [nnz]f32)
          (indices_data: [nnz]i64) 
          (pointers: [np1]i64) =
@@ -16,10 +17,10 @@ let calculate_objective [nnz][np1]
   let num_iterations = 10i32 --250i32
   let k = 10i64
 
-  let (cluster_centers, num_its) =
+  let (cluster_centers, _num_its) =
       kmeansSpAD k threshold num_iterations fix_iter
                  values
                  indices_data
                  pointers
-  in  (cluster_centers[0,:33], num_its)
+  in cluster_centers
 

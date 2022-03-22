@@ -14,6 +14,7 @@ from jax.random import PRNGKey, split, normal, bernoulli
 from benchmark import (Benchmark, set_precision)
 import numpy as np
 from time import time_ns
+import json
 
 data_dir = Path(__file__).parent / "data"
 

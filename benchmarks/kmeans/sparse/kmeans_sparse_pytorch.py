@@ -9,6 +9,7 @@ from torch.autograd.functional import vhp
 from torch.autograd.functional import vjp
 from scipy.sparse import csr_matrix
 import numpy as np
+import json
 
 from benchmark import (Benchmark, set_precision)
 
@@ -41,9 +42,6 @@ class KMeansSparse(Benchmark):
 
       self.sp_features = torch.sparse.FloatTensor(i, v, torch.Size(shape)).to(device)
       self.sp_clusters = get_clusters(self.k, *sp_data, self.sp_features.size()[1]).to(device)
-      print(self.sp_clusters.detach())
-      sys.exit(1)
-
 
     def calculate_objective(self):
        self.objective = kmeans(self.max_iter, self.sp_clusters, self.sp_features, self.threshold)

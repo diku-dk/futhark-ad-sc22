@@ -6,7 +6,6 @@ FUTHARK=futhark
 FUTHARK_BACKEND=cuda
 FUTHARK_BENCH_OPTIONS=--pass-option=--default-tile-size=$(FUTHARK_TILE_SIZE) --pass-option=--default-reg-tile=$(FUTHARK_REG_TILE)
 PYTHONPATH=../..:..:$PYTHONPATH
-PYTHON=python3
 
 %.json: %.py
 	$(PYTHON) -c 'import $(basename  $<); $(basename $<).benchmarks(runs=$(RUNS), output="$(basename $<).json")'

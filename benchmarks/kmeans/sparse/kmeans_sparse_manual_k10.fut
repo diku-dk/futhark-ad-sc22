@@ -7,7 +7,7 @@
 
 import "kmeans_sparse_manual"
 
-let calculate_objective [nnz][np1] 
+entry calculate_objective [nnz][np1] 
          (values: [nnz]f32)
          (indices_data: [nnz]i64) 
          (pointers: [np1]i64) =
@@ -17,8 +17,8 @@ let calculate_objective [nnz][np1]
   let num_iterations = 10 --250i64
   let k = 10i64
 
-  let (delta, i, cluster_centers) =
+  let (_delta, _i, cluster_centers) =
     kmeans_seq_rows fix_iter threshold num_iterations k
                     values indices_data pointers
 
-  in  (cluster_centers[0,:33], delta, i)
+  in  cluster_centers

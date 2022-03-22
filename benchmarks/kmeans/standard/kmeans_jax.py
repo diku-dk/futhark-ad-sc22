@@ -63,7 +63,7 @@ def benchmarks(datasets = ["kdd_cup", "random"], runs=10, output="kmeans_jax.jso
     kmeans.benchmark()
     times['data/' + data] = { 'jax' : 
                            { 'objective': kmeans.objective_time,
-                             'objective_std': kmeans.objective_std,
+                             'objective_std': kmeans.objective_std
                            }
                   }
   with open(output,'w') as f:
