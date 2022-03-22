@@ -7,7 +7,7 @@ import futhark_data
 import jax
 import jax.numpy as jnp
 import numpy as np
-from jax import jacfwd, jacrev
+from jax import jacfwd, jacrev, jvp, vjp, grad
 
 from benchmark import (Benchmark, set_precision)
 import json
@@ -32,8 +32,11 @@ class KMeans(Benchmark):
       timings = np.zeros(runs + 1)
       for i in range(runs + 1):
           start = time_ns()
-          self.objective = kmeans(self.max_iter, self.clusters, self.features).block_until_ready()
+          #self.objective = kmeans(self.max_iter, self.clusters, self.features).block_until_ready()
+          t, rmse, self.objective = jax.block_until_ready(kmeans(self.max_iter, self.clusters, self.features))
           timings[i] = (time_ns() - start)/1000
+          print(self.name)
+          print(f't: {t}, rmse: {rmse}, max_iter: {self.max_iter}')
       return timings
 
     def calculate_jacobian(self, runs):
@@ -83,6 +86,7 @@ def cost(points, centers):
     min_dist = jnp.min(dists, axis=0)
     return min_dist.sum()
 
+
 @jax.jit
 def kmeans(max_iter, clusters, features, _tolerance=1):
     tolerance=1
@@ -92,16 +96,15 @@ def kmeans(max_iter, clusters, features, _tolerance=1):
 
     def body(v):
         t, rmse, clusters = v
-        jac_fn = jacrev(partial(cost, features))
-        hes_fn = jacfwd(jac_fn)
-
-        new_cluster = clusters - jac_fn(clusters) / hes_fn(clusters).sum((0, 1))
+        f_vjp = grad(partial(cost, features))
+        hes = grad(lambda x: jnp.vdot(f_vjp(x), jnp.ones(shape=clusters.shape)))(clusters)
+        new_cluster = clusters - f_vjp(clusters) / hes
         rmse = ((new_cluster - clusters) ** 2).sum()
         return t + 1, rmse, new_cluster
 
     t, rmse, clusters = jax.lax.while_loop(cond, body, (0, float("inf"), clusters))
 
-    return clusters
+    return t, rmse, clusters
 
 def data_gen(name):
     data_file = data_dir / f'{name}.in.gz'
