@@ -39,6 +39,7 @@ class KMeansSparse(Benchmark):
       cluster_shape = (self.k, shape[1])
       self.features = sparse.BCOO((values, indices), shape=shape)
       self.clusters = jnp.array(get_clusters(self.k, *sp_data, shape[1]).detach())
+      print(self.clusters)
 
     def calculate_objective(self, runs):
       timings = np.zeros(runs + 1)
@@ -71,7 +72,7 @@ def get_clusters(k, values, indices, pointers, num_col):
     )
     return sp_clusters
 
-def benchmarks(datasets = ['movielens', 'nytimes', 'scrna'], runs=10, output="kmeans_sparse_pytorch.json"):
+def benchmarks(datasets = ['nytimes'], runs=1, output="kmeans_sparse_jax.json"):
   times = {}
   for data in datasets:
     kmeans = KMeansSparse(data, runs)
@@ -94,7 +95,7 @@ def cost(points, centers):
     return min_dist.sum()
 
 @jax.jit
-def kmeans(max_iter, clusters, features, tolerance=1):
+def kmeans(max_iter, clusters, features, tolerance):
     cost_sp = sparsify(cost)
 
     def cond(v):
