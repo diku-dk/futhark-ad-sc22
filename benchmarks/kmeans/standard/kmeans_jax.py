@@ -43,7 +43,7 @@ class KMeans(Benchmark):
         data_file = data_dir / f'{self.name}.out'
         if data_file.exists():
           out = tuple(futhark_data.load(open(data_file)))[0]
-          assert(np.allclose(out, self.objective.cpu().detach().numpy(), rtol=1e-02, atol=1e-05))
+          assert(np.allclose(out, self.objective, rtol=1e-02, atol=1e-05))
 
 def bench(kmeans_args, times=10):
     timings = np.zeros((times,))
@@ -61,6 +61,7 @@ def benchmarks(datasets = ["kdd_cup", "random"], runs=10, output="kmeans_jax.jso
   for data in datasets:
     kmeans = KMeans(data, runs)
     kmeans.benchmark()
+    kmeans.validate()
     times['data/' + data] = { 'jax' : 
                            { 'objective': kmeans.objective_time,
                              'objective_std': kmeans.objective_std
