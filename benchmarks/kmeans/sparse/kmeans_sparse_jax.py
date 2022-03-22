@@ -104,15 +104,14 @@ def kmeans(max_iter, clusters, features, tolerance):
 
     def body(v):
         t, rmse, clusters = v
-        jac_fn = jacrev(partial(cost_sp, features), allow_int=True)
-        hes_fn = jacfwd(jac_fn)
-
-        new_cluster = clusters - jac_fn(clusters) / hes_fn(clusters).sum((0, 1))
+        f_vjp = grad(partial(cost, features))
+        hes = grad(lambda x: jnp.vdot(f_vjp(x), jnp.ones(shape=clusters.shape)))(clusters)
+        new_cluster = clusters - f_vjp(clusters) / hes
         rmse = ((new_cluster - clusters) ** 2).sum()
         return t + 1, rmse, new_cluster
 
-    t, rmse, clusters = while_loop(cond, sparsify(body), (0, float("inf"), clusters))
-    return clusters
+    t, rmse, clusters = jax.lax.while_loop(cond, body, (0, float("inf"), clusters))
+    return t, rmse, clusters
 
 def data_gen(name):
     """Dataformat CSR  (https://en.wikipedia.org/wiki/Sparse_matrix)"""
