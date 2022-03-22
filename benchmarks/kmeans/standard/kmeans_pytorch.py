@@ -63,8 +63,8 @@ def cost(points, centers):
     (min_dist,_) = torch.min(dists, dim=0)
     return min_dist.sum()
 
-def kmeans(_, k, max_iter, features, tolerance=1):
-
+def kmeans(_, k, max_iter, features, _tolerance=1):
+    tolerance=1
     clusters = torch.flip(features[-int(k):], (0,))
     t = 0
     converged = False

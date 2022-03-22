@@ -84,7 +84,8 @@ def cost(points, centers):
     return min_dist.sum()
 
 @jax.jit
-def kmeans(max_iter, clusters, features, tolerance=1):
+def kmeans(max_iter, clusters, features, _tolerance=1):
+    tolerance=1
     def cond(v):
         t, rmse, _ = v
         return jnp.logical_and(t < max_iter, rmse > tolerance)
