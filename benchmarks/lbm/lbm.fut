@@ -221,15 +221,15 @@ def lbm [f] (grid_init: [f]f32) (steps: i32): *[f]f32 =
 -- are concerned with parallel performance, having more sequential
 -- steps is not terribly interesting, and just takes longer to run.
 -- ==
--- entry: main
+-- entry: calculate_objective
 -- compiled input @ data/120_120_150_ldc.in.gz
 
-entry main [s] (input: *[s]f32): *[s]f32 =
+entry calculate_objective [s] (input: *[s]f32): *[s]f32 =
   lbm input 100
 
 -- ==
--- entry: diff
+-- entry: calculate_jacobian
 -- compiled input @ data/120_120_150_ldc.in.gz
 
-entry diff [s] (input: *[s]f32): *[s]f32 =
+entry calculate_jacobian [s] (input: *[s]f32): *[s]f32 =
   vjp (flip lbm 100) input (replicate s 1)
