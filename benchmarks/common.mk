@@ -24,7 +24,7 @@ gen_results: $(shell find . -type f \( -name "*.json" ! -name "$(RESULTS)" \))
 	$(PYTHON) -c 'import benchmark; benchmark.dump("$(RESULTS)", jac_speedup=$(JAC_SPEEDUP), obj_speedup=$(OBJ_SPEEDUP))'
 
 gen_latex: $(shell find . -type f \( -name "*.json" ! -name "$(RESULTS)" \))
-	@$(PYTHON) -c 'import benchmark; benchmark.latex_$(NAME)()'
+	@$(PYTHON) -c 'import benchmark; benchmark.latex("$(NAME)")'
 
 .PHONY: clean
 

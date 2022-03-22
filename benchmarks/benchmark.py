@@ -130,43 +130,50 @@ def pretty(paths):
   print(json.dumps(d, sort_keys=True, indent=2))
 
 def ms(n):
-  return round(n/1000, 1)
+  return round(n/1e3, 1)
+
+def s(n, d=3):
+  return round(n/1e6, d)
 
 def r(n):
   return round(n, 1)
 
-def latex_gmm(paths):
-  print(paths)
+def latex(name, paths = get_results()):
   d = process(paths)
-  d0 = d['data/1k/gmm_d64_K200']
-  d1 = d['data/1k/gmm_d128_K200']
-  d2 = d['data/10k/gmm_d32_K200']
-  d3 = d['data/10k/gmm_d64_K25']
-  d4 = d['data/10k/gmm_d128_K25']
-  d5 = d['data/10k/gmm_d128_K200']
-  print(f"""
-                                      & $\\mathbf{{D}}_0$                        & $\\mathbf{{D}}_1$                       & $\\mathbf{{D}}_2$                       & $\\mathbf{{D}}_3$                       & $\\mathbf{{D}}_4$                       & $\\mathbf{{D}}_5$\\\\ \\hline
-\\textbf{{PyT. Jacob. (ms)}}          & ${ms(d0['pytorch']['jacobian'])}$        & ${ms(d1['pytorch']['jacobian'])}$       & ${ms(d2['pytorch']['jacobian'])}$       & ${ms(d3['pytorch']['jacobian'])}$       & ${ms(d4['pytorch']['jacobian'])}$       & ${ms(d5['pytorch']['jacobian'])}$       \\\\
-\\textbf{{Fut. Speedup ($\\times$)}}  & ${r(d0['futhark']['jac_speedup_pytorch'])}$  & ${r(d1['futhark']['jac_speedup_pytorch'])}$ & ${r(d2['futhark']['jac_speedup_pytorch'])}$ & ${r(d3['futhark']['jac_speedup_pytorch'])}$ & ${r(d4['futhark']['jac_speedup_pytorch'])}$ & ${r(d5['futhark']['jac_speedup_pytorch'])}$ \\\\
-\\textbf{{PyT. Overhead ($\\times$)}} & ${r(d0['pytorch']['overhead'])}$         & ${r(d1['pytorch']['overhead'])}$        & ${r(d2['pytorch']['overhead'])}$        & ${r(d3['pytorch']['overhead'])}$        & ${r(d4['pytorch']['overhead'])}$        & ${r(d5['pytorch']['overhead'])}$        \\\\
-\\textbf{{Fut. Overhead ($\\times$)}} & ${r(d0['pytorch']['overhead'])}$         & ${r(d1['pytorch']['overhead'])}$        & ${r(d2['pytorch']['overhead'])}$        & ${r(d3['pytorch']['overhead'])}$        & ${r(d4['pytorch']['overhead'])}$        & ${r(d5['pytorch']['overhead'])}$         
-""")
+  if name is 'gmm':
+    d0 = d['data/1k/gmm_d64_K200']
+    d1 = d['data/1k/gmm_d128_K200']
+    d2 = d['data/10k/gmm_d32_K200']
+    d3 = d['data/10k/gmm_d64_K25']
+    d4 = d['data/10k/gmm_d128_K25']
+    d5 = d['data/10k/gmm_d128_K200']
+    print(f"""
+                                          & $\\mathbf{{D}}_0$                        & $\\mathbf{{D}}_1$                       & $\\mathbf{{D}}_2$                       & $\\mathbf{{D}}_3$                       & $\\mathbf{{D}}_4$                       & $\\mathbf{{D}}_5$\\\\ \\hline
+    \\textbf{{PyT. Jacob. (ms)}}          & ${ms(d0['pytorch']['jacobian'])}$        & ${ms(d1['pytorch']['jacobian'])}$       & ${ms(d2['pytorch']['jacobian'])}$       & ${ms(d3['pytorch']['jacobian'])}$       & ${ms(d4['pytorch']['jacobian'])}$       & ${ms(d5['pytorch']['jacobian'])}$       \\\\
+    \\textbf{{Fut. Speedup ($\\times$)}}  & ${r(d0['futhark']['jac_speedup_pytorch'])}$  & ${r(d1['futhark']['jac_speedup_pytorch'])}$ & ${r(d2['futhark']['jac_speedup_pytorch'])}$ & ${r(d3['futhark']['jac_speedup_pytorch'])}$ & ${r(d4['futhark']['jac_speedup_pytorch'])}$ & ${r(d5['futhark']['jac_speedup_pytorch'])}$ \\\\
+    \\textbf{{PyT. Overhead ($\\times$)}} & ${r(d0['pytorch']['overhead'])}$         & ${r(d1['pytorch']['overhead'])}$        & ${r(d2['pytorch']['overhead'])}$        & ${r(d3['pytorch']['overhead'])}$        & ${r(d4['pytorch']['overhead'])}$        & ${r(d5['pytorch']['overhead'])}$        \\\\
+    \\textbf{{Fut. Overhead ($\\times$)}} & ${r(d0['pytorch']['overhead'])}$         & ${r(d1['pytorch']['overhead'])}$        & ${r(d2['pytorch']['overhead'])}$        & ${r(d3['pytorch']['overhead'])}$        & ${r(d4['pytorch']['overhead'])}$        & ${r(d5['pytorch']['overhead'])}$""")
 
-def latex_lstm(paths):
-  d = process(paths)
-  d0 = d['data/lstm-bs1024-n20-d300-h192']
-  d1 = d['data/lstm-bs1024-n300-d80-h256']
-  print(f"""
-         \\multirow{{2}}{{*}}{{\\rotatebox[origin=c]{{90}}{{\\scriptsize\\textbf{{gpu}}}}}}   & \\multicolumn{{1}}{{|c}}{{$\\mathbf{{D_0}}$}} & \\multicolumn{{1}}{{c|}}{{${ms(d0['naive']['jacobian'])}$}}  &  {r(d0['futhark']['speedup_naive'])} & \\multicolumn{{1}}{{c|}}{{{r(d0['futhark']['speedup_naive'])}}} & {r(d0['naive']['overhead'])} & {r(d0['futhark']['overhead'])}  & {r(d0['torch.nn.LSTM']['overhead'])} \\\\
-                                                                                              & \\multicolumn{{1}}{{|c}}{{$\\mathbf{{D_1}}$}} & \\multicolumn{{1}}{{c|}}{{${ms(d1['naive']['jacobian'])}$}}  &  {r(d1['futhark']['speedup_naive'])} & \\multicolumn{{1}}{{c|}}{{{r(d1['futhark']['speedup_naive'])}}} & {r(d1['naive']['overhead'])} & {r(d1['futhark']['overhead'])}  & {r(d1['torch.nn.LSTM']['overhead'])} \\\\\\hline
-         """)
+  elif name is 'lstm':
+    d0 = d['data/lstm-bs1024-n20-d300-h192']
+    d1 = d['data/lstm-bs1024-n300-d80-h256']
+    print(f"""
+           \\multirow{{2}}{{*}}{{\\rotatebox[origin=c]{{90}}{{\\scriptsize\\textbf{{gpu}}}}}}   & \\multicolumn{{1}}{{|c}}{{$\\mathbf{{D_0}}$}} & \\multicolumn{{1}}{{c|}}{{${ms(d0['naive']['jacobian'])}$}}  &  {r(d0['futhark']['speedup_naive'])} & \\multicolumn{{1}}{{c|}}{{{r(d0['futhark']['speedup_naive'])}}} & {r(d0['naive']['overhead'])} & {r(d0['futhark']['overhead'])}  & {r(d0['torch.nn.LSTM']['overhead'])} \\\\
+                                                                                                & \\multicolumn{{1}}{{|c}}{{$\\mathbf{{D_1}}$}} & \\multicolumn{{1}}{{c|}}{{${ms(d1['naive']['jacobian'])}$}}  &  {r(d1['futhark']['speedup_naive'])} & \\multicolumn{{1}}{{c|}}{{{r(d1['futhark']['speedup_naive'])}}} & {r(d1['naive']['overhead'])} & {r(d1['futhark']['overhead'])}  & {r(d1['torch.nn.LSTM']['overhead'])} \\\\\\hline""")
 
-def latex_kmeans(paths):
-  d = process(paths, False, True)
-  d0 = d['data/kdd_cup']
-  d1 = d['data/random']
-  print(f"""
-  $(k,n,d)$          & \\textbf{{Manual}}                & \\multicolumn{{1}}{{c|}}{{\\textbf{{AD}}}} & \\textbf{{PyTorch}}                 & \\textbf{{JAX}} \\\\\\hline
-  $(5,494019,35)$    & ${ms(d0['manual']['objective'])}$ & ${ms(d0['futhark']['objective'])}$         & ${ms(d0['pytorch']['objective'])}$ & ${ms(d0['jax']['objective'])}$ \\\\
-  $(1024,10000,256)$ & ${ms(d1['manual']['objective'])}$ & ${ms(d1['futhark']['objective'])}$         & ${ms(d1['pytorch']['objective'])}$ & ${ms(d1['jax']['objective'])}$ \\\\ \\hline
-  """)
+  elif name is 'kmeans':
+    d0 = d['data/kdd_cup']
+    d1 = d['data/random']
+    print(f"""
+    $(k,n,d)$          & \\textbf{{Manual}}                & \\multicolumn{{1}}{{c|}}{{\\textbf{{AD}}}} & \\textbf{{PyTorch}}                 & \\textbf{{JAX}} \\\\\\hline
+    $(5,494019,35)$    & ${ms(d0['manual']['objective'])}$ & ${ms(d0['futhark']['objective'])}$         & ${ms(d0['pytorch']['objective'])}$ & ${ms(d0['jax']['objective'])}$ \\\\
+    $(1024,10000,256)$ & ${ms(d1['manual']['objective'])}$ & ${ms(d1['futhark']['objective'])}$         & ${ms(d1['pytorch']['objective'])}$ & ${ms(d1['jax']['objective'])}$ \\\\ \\hline
+    """)
+
+  elif name is 'rsbench':
+    d0 = d['data/small']
+    print(f"\\textbf{{RSBench}} & $2.311s$ & ${s(d0['futhark']['objective'])}s$ & ${r(d0['futhark']['overhead'])}\\times$ & $4.2\\times$ \\\\")
+
+  elif name is 'xsbench':
+    d0 = d['data/small']
+    print(f"\\textbf{{XSBench}} & $0.244s$ & ${s(d0['futhark']['objective'])}s$ & ${r(d0['futhark']['overhead'])}\\times$ & $3.2\\times$ \\\\")
