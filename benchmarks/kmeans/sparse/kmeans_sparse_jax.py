@@ -36,7 +36,6 @@ class KMeansSparse(Benchmark):
 
       end = sp_data[2][self.k]
       cluster_shape = (self.k, shape[1])
-      print(cluster_shape)
       self.features = sparse.BCOO((values, indices), shape=shape)
       self.clusters = jnp.array(get_clusters(self.k, *sp_data, shape[1]).detach())
 
@@ -116,11 +115,6 @@ def data_gen(name):
         values, indices, pointers = tuple(futhark_data.load(f))
 
     return (values, indices, pointers)
-    #return (
-    #    jnp.array(values),
-    #    jnp.array(torch.tensor(indices, dtype=torch.int32)),
-    #    jnp.array(torch.tensor(pointers, dtype=torch.int32)),
-    #)
 
 if __name__ == '__main__':
     data_key, sparse_key = split(PRNGKey(8))
