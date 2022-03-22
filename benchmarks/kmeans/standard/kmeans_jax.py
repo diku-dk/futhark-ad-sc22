@@ -11,6 +11,7 @@ from jax import jacfwd, jacrev
 
 from benchmark import (Benchmark, set_precision)
 import json
+import gzip
 
 data_dir = Path(__file__).parent / 'data'
 
@@ -27,11 +28,16 @@ class KMeans(Benchmark):
         self.features = features
         self.clusters = jnp.flip(features[-int(k):], (0,))
 
-    def calculate_objective(self):
-       self.objective = kmeans(self.max_iter, self.clusters, self.features).block_until_ready()
+    def calculate_objective(self, runs):
+      timings = np.zeros(runs + 1)
+      for i in range(runs + 1):
+          start = time_ns()
+          self.objective = kmeans(self.max_iter, self.clusters, self.features).block_until_ready()
+          timings[i] = (time_ns() - start)/1000
+      return timings
 
-    def calculate_jacobian(self):
-        return
+    def calculate_jacobian(self, runs):
+        return np.zeros(runs + 1)
 
 def bench(kmeans_args, times=10):
     timings = np.zeros((times,))
@@ -70,7 +76,6 @@ def cost(points, centers):
     min_dist = jnp.min(dists, axis=0)
     return min_dist.sum()
 
-
 @jax.jit
 def kmeans(max_iter, clusters, features, tolerance=1):
     def cond(v):
@@ -90,16 +95,11 @@ def kmeans(max_iter, clusters, features, tolerance=1):
 
     return clusters
 
-
 def data_gen(name):
-    # run futhark dataget kmeans.fut '0' > data/random.in
-    data_file = data_dir / f'{name}.in'
+    data_file = data_dir / f'{name}.in.gz'
     assert data_file.exists()
-
-    with data_file.open('rb') as f:
-        kmeans_args = tuple(futhark_data.load(f))
+    kmeans_args = tuple(futhark_data.load(gzip.open(data_file)))
     return tuple(map(jnp.array, kmeans_args))
-
 
 def bench(kmeans_args, times=10):
     timings = np.zeros((times,))

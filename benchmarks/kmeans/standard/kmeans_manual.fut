@@ -1,9 +1,7 @@
 -- ==
 -- entry: calculate_objective
--- input @ data/kdd_cup.in.gz
--- input @ data/random.in
-
--- output @ data/kdd_cup.out
+-- input @ data/kdd_cup.in.gz output @ data/kdd_cup.out
+-- input @ data/random.in.gz
 
 let euclid_dist_2 [d] (pt1: [d]f32) (pt2: [d]f32): f32 =
   f32.sum (map (\x->x*x) (map2 (-) pt1 pt2))

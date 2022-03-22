@@ -41,11 +41,9 @@ class Benchmark(ABC):
 
   def time_objective(self):
       self.objective_time, self.objective_std = self.time_fun(self.calculate_objective)
-      print(self.objective_time)
 
   def time_jacobian(self):
       self.jacobian_time, self.jacobian_std = self.time_fun(self.calculate_jacobian)
-      print(self.jacobian_time)
 
   def benchmark(self):
     self.prepare()

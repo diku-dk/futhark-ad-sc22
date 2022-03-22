@@ -9,6 +9,7 @@ from torch.autograd.functional import vjp
 
 from benchmark import (Benchmark, set_precision)
 import json
+import gzip
 
 data_dir = Path(__file__).parent / 'data'
 
@@ -90,12 +91,9 @@ def bench(kmeans_args, times=10):
 
 
 def data_gen(name, device):
-    # run futhark dataget kmeans.fut '0' > data/random.in
-    data_file = data_dir / f'{name}.in'
+    data_file = data_dir / f'{name}.in.gz'
     assert data_file.exists()
-
-    with data_file.open('rb') as f:
-        kmeans_args = tuple(futhark_data.load(f))
+    kmeans_args = tuple(futhark_data.load(gzip.open(data_file)))
     return tuple(map(partial(torch.tensor, device=device, dtype=torch.float32), kmeans_args))
 
 
