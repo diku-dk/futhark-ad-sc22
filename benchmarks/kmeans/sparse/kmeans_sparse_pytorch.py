@@ -51,6 +51,12 @@ class KMeansSparse(Benchmark):
     def calculate_jacobian(self):
         return
 
+    def validate(self):
+        data_file = data_dir / f'{self.name}.out'
+        if data_file.exists():
+          out = tuple(futhark_data.load(open(data_file)))[0]
+          assert(np.allclose(out, self.objective.cpu().detach().numpy(), rtol=1e-02, atol=1e-05))
+
 def benchmarks(datasets = ['movielens', 'nytimes', 'scrna'], runs=10, output="kmeans_sparse_pytorch.json"):
   set_precision("f32")
   times = {}

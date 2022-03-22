@@ -6,6 +6,7 @@ import futhark_data
 import torch
 from torch.autograd.functional import vhp
 from torch.autograd.functional import vjp
+import numpy as np
 
 from benchmark import (Benchmark, set_precision)
 import json
@@ -29,16 +30,23 @@ class KMeans(Benchmark):
     def calculate_jacobian(self):
         return
 
+    def validate(self):
+        data_file = data_dir / f'{self.name}.out'
+        if data_file.exists():
+          out = tuple(futhark_data.load(open(data_file)))[0]
+          assert(np.allclose(out, self.objective.cpu().detach().numpy(), rtol=1e-02, atol=1e-05))
+
 def benchmarks(datasets = ["kdd_cup", "random"], runs=10, output="kmeans_pytorch.json"):
   set_precision("f32")
   times = {}
   for data in datasets:
     kmeans = KMeans(data, runs, "cuda")
     kmeans.benchmark()
+    kmeans.validate()
     times['data/' + data] = { 'pytorch' : 
-                           { 'objective': kmeans.objective_time,
-                             'objective_std': kmeans.objective_std,
-                           }
+                            { 'objective': kmeans.objective_time,
+                              'objective_std': kmeans.objective_std,
+                            }
                   }
   with open(output,'w') as f:
     json.dump(times, f, indent=2)

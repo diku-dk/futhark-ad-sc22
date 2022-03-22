@@ -50,6 +50,12 @@ class KMeansSparse(Benchmark):
     def calculate_jacobian(self, runs):
         return np.zeros(runs + 1)
 
+    def validate(self):
+        data_file = data_dir / f'{self.name}.out'
+        if data_file.exists():
+          out = tuple(futhark_data.load(open(data_file)))[0]
+          assert(np.allclose(out, self.objective.cpu().detach().numpy(), rtol=1e-02, atol=1e-05))
+
 def get_clusters(k, values, indices, pointers, num_col):
     end = pointers[k]
     sp_clusters = (
@@ -64,7 +70,7 @@ def get_clusters(k, values, indices, pointers, num_col):
     )
     return sp_clusters
 
-def benchmarks(datasets = ['movielens', 'nytimes', 'scrna'], runs=1, output="kmeans_sparse_pytorch.json"):
+def benchmarks(datasets = ['movielens', 'nytimes', 'scrna'], runs=10, output="kmeans_sparse_pytorch.json"):
   times = {}
   for data in datasets:
     kmeans = KMeansSparse(data, runs)

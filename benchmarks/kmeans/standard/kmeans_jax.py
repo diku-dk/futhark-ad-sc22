@@ -39,6 +39,12 @@ class KMeans(Benchmark):
     def calculate_jacobian(self, runs):
         return np.zeros(runs + 1)
 
+    def validate(self):
+        data_file = data_dir / f'{self.name}.out'
+        if data_file.exists():
+          out = tuple(futhark_data.load(open(data_file)))[0]
+          assert(np.allclose(out, self.objective.cpu().detach().numpy(), rtol=1e-02, atol=1e-05))
+
 def bench(kmeans_args, times=10):
     timings = np.zeros((times,))
     _, k, max_iter, features = kmeans_args
