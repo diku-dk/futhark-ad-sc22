@@ -13,11 +13,3 @@ entry calculate_objective = helmholtz
 											      
 entry calculate_jacobian [n] (R: f32) (T: f32) (b: [n]f32) (A: [n][n]f32) (xs: [n]f32) =
   vjp (helmholtz R T b A) xs 1.0
-
-
---    let R = 1.
---    let T = 1.
---    let b = Vector.init n (fun _ -> D (0.1 * rnd.NextDouble()))
---    let A = Matrix.init n n (fun _ _ -> D (0.1 * rnd.NextDouble()))
---    let x = Vector.init n (fun _ -> D (0.1 * rnd.NextDouble()))
---    grad (helmholtz R T b A) x
