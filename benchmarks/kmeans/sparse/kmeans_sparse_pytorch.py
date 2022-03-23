@@ -42,7 +42,9 @@ class KMeansSparse(Benchmark):
 
     def calculate_objective(self):
         self.objective = kmeans(
-            self.max_iter, self.sp_clusters, self.sp_features,
+            self.max_iter,
+            self.sp_clusters,
+            self.sp_features,
         )
 
     def calculate_jacobian(self):

@@ -50,7 +50,7 @@ def gen_data(parameters=parameters, data_dir="data", prec="f32"):
     return
 
 
-def bench_all(runs, output, parameters=parameters, data_dir="data", prec='f32'):
+def bench_all(runs, output, parameters=parameters, data_dir="data", prec="f32"):
     set_precision(prec)
     times = {}
     for params in parameters:
