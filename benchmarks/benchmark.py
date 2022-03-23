@@ -1,5 +1,6 @@
 import json
 import os
+import re
 from abc import ABC, abstractmethod
 
 import numpy as np
@@ -79,7 +80,8 @@ def set_precision(prec):
         sys.exit("Error: invalid precision " + prec)
 
 
-def process_futhark(path, source, name="futhark"):
+def process_futhark(name, path, source, basename):
+    name = "futhark" if name == basename else re.sub("^.*_", "", basename)
     with open(path, "r") as f:
         fut = json.load(f)
         objective = fut[source + ":calculate_objective"]["datasets"]
@@ -106,7 +108,7 @@ def process_futhark(path, source, name="futhark"):
         json.dump(res, f, sort_keys=True, indent=2)
 
 
-def process(paths, jac_speedup=True, obj_speedup=False):
+def process(paths, jac_speedup, obj_speedup):
     res = {}
     for p in paths:
         with open(p, "r") as f:
@@ -135,7 +137,7 @@ def get_results(d="./"):
     return res
 
 
-def dump(out_path, paths=get_results(), jac_speedup=True, obj_speedup=False):
+def dump(out_path, jac_speedup, obj_speedup, paths=get_results()):
     d = process(paths, jac_speedup, obj_speedup)
     with open(out_path, "w") as f:
         json.dump(d, f, sort_keys=True, indent=2)
@@ -158,8 +160,8 @@ def r(n):
     return round(n, 1)
 
 
-def latex(name, paths=get_results()):
-    d = process(paths)
+def latex(name, jac_speedup, obj_speedup, paths=get_results()):
+    d = process(paths, jac_speedup, obj_speedup)
     if name is "gmm":
         d0 = d["data/1k/gmm_d64_K200"]
         d1 = d["data/1k/gmm_d128_K200"]
@@ -195,6 +197,19 @@ def latex(name, paths=get_results()):
     $(1024,10000,256)$ & ${ms(d1['manual']['objective'])}$ & ${ms(d1['futhark']['objective'])}$         & ${ms(d1['pytorch']['objective'])}$ & ${ms(d1['jax']['objective'])}$ \\\\ \\hline
     """
         )
+
+    #    elif name is "kmeans_sparse":
+    #        d0 = d["data/kdd_cup"]
+    #        d1 = d["data/random"]
+    #        d1 = d["data/random"]
+    #
+    #  \begin{tabular}{lc|rr|r}
+    #                                                                       & & \multicolumn{2}{c|}{\textbf{Futhark}} & \\\
+    #                                                                       & Workload & \textbf{Manual} & \multicolumn{1}{c|}{\textbf{AD}} & \textbf{PyTorch} \\\hline
+    # \multirow{2}{*}{\rotatebox[origin=c]{90}{\scriptsize\textbf{A100}}}   & movielens & $61ms$ & $152ms$ & $61223ms$ \\
+    #                                                                       & nytimes   & $83ms$ & $300ms$ & $226896ms$ \\
+    #                                                                       & scrna     & $156ms$ & $579ms$ & $367799ms$\\
+    #  \end{tabular}
 
     elif name is "rsbench":
         d0 = d["data/small"]

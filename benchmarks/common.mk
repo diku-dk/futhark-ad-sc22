@@ -13,20 +13,16 @@ PYTHON_CMD=PYTHONPATH=../../:../ $(PYTHON)
 
 %.json: %.fut
 	$(FUTHARK) bench $< $(FUTHARK_TUNING) $(FUTHARK_BENCH_OPTIONS) -r $(RUNS) --backend=$(FUTHARK_BACKEND) --json $@
-ifeq ($(NAME),$(basename $<))
-	$(PYTHON_CMD) -c 'import benchmark; benchmark.process_futhark("$(basename $<).json", "$<")'
-else
-	TYPE=$(patsubst *_%, %, $<)
-	$(PYTHON_CMD) -c 'import benchmark; benchmark.process_futhark("$(basename $<).json", "$<", "$(TYPE)")'
-endif
+	$(PYTHON_CMD) -c 'import benchmark; benchmark.process_futhark("$(NAME)", "$(basename $<).json", "$<", "$(patsubst *_%, %, $(basename $<))")'
 
-gen_results: $(shell find . -type f \( -name "*.json" ! -name "$(RESULTS)" \))
+gen_results:
 	$(PYTHON_CMD) -c 'import benchmark; benchmark.dump("$(RESULTS)", jac_speedup=$(JAC_SPEEDUP), obj_speedup=$(OBJ_SPEEDUP))'
 
-gen_latex: $(shell find . -type f \( -name "*.json" ! -name "$(RESULTS)" \))
-	@$(PYTHON_CMD) -c 'import benchmark; benchmark.latex("$(NAME)")'
+latex: $(RESULTS)
+	@$(PYTHON_CMD) -c 'import benchmark; benchmark.latex("$(NAME)", $(JAC_SPEEDUP), $(OBJ_SPEEDUP))'
 
 .PHONY: clean
 
 clean:
-	rm -rf *.json *.c *.actual *.expected __pycache__  $(find . -executable -type f)
+	rm -rf *.json *.c *.actual *.expected __pycache__
+	find . -executable -type f -delete
