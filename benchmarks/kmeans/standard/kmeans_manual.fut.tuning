@@ -1,5 +1,5 @@
-calculate_objective.suff_intra_par_1=5
+calculate_objective.suff_intra_par_1=10000
 calculate_objective.suff_outer_par_0=494019
 calculate_objective.suff_outer_par_2=2470095
 calculate_objective.suff_outer_par_4=2000000000
-calculate_objective.suff_outer_redomap_3=5
+calculate_objective.suff_outer_redomap_3=2000000000
