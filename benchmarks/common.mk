@@ -29,4 +29,4 @@ gen_latex: $(shell find . -type f \( -name "*.json" ! -name "$(RESULTS)" \))
 .PHONY: clean
 
 clean:
-	rm -rf *.json *.c *.actual *.expected $(NAME) __pycache__  $(find . -executable -type f)
+	rm -rf *.json *.c *.actual *.expected __pycache__  $(find . -executable -type f)
