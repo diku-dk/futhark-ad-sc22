@@ -101,17 +101,3 @@ def data_gen(name):
     assert data_file.exists()
     kmeans_args = tuple(futhark_data.load(gzip.open(data_file)))
     return tuple(map(jnp.array, kmeans_args))
-
-
-if __name__ == "__main__":
-    clusters = jax.random.normal(jax.random.PRNGKey(0), (5, 100))
-    features = jax.random.normal(jax.random.PRNGKey(0), (10, 100))
-
-    expected_norms = all_pairs_norm(features, clusters)
-    actual_norms = jax.vmap(
-        lambda feature: jax.vmap(
-            lambda cluster: jnp.dot((feature - cluster), (feature - cluster))
-        )(features)
-    )(clusters)
-
-    jnp.allclose(expected_norms, actual_norms)
