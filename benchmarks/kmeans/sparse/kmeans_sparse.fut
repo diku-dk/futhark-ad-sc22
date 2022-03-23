@@ -64,9 +64,7 @@ let tolerance = 1 : f32
 
 let kmeansSpAD [nnz][np1]
         (k: i64)
-        (_threshold: f32)
         (num_iterations: i32)
-        (_fix_iter: bool)
         (values: [nnz]f32)
         (indices_data: [nnz]i64) 
         (pointers: [np1]i64) =
@@ -85,20 +83,38 @@ let kmeansSpAD [nnz][np1]
       initCenters k columns pointers row_indices values indices_data
 
   let i = 0
-  let stop = false
-  let (cluster_centers, i, _stop) =
+  let (cluster_centers, _i) =
     -- ALWAYS EXECUTE num_iterations
-    loop (cluster_centers : [k][columns]f32, i, stop)
-      while i < num_iterations && !stop do
+    loop (cluster_centers : [k][columns]f32, i)
+      while i < num_iterations do
         let (cost', cost'') =
           jvp2  (\x -> vjp (costSparse values indices_data pointers) x 1)
                 cluster_centers
                 (replicate k (replicate columns 1))
-        -- let x = map2 (map2 (/)) cost' cost''
         let x = map2 (map2 (\ c' c'' -> 1.0 * c' / c'' )) cost' cost''
         let new_centers = map2 (map2 (-)) cluster_centers x
---        let stop =
---          (map2 euclid_dist_2 new_centers cluster_centers |> f32.sum)
---          < tolerance
-        in (new_centers, i+1, stop)
-  in (cluster_centers, i)
+        in (new_centers, i+1)
+  in cluster_centers
+
+	
+entry calculate_objective [nnz][np1] 
+         (values: [nnz]f32)
+         (indices_data: [nnz]i64) 
+         (pointers: [np1]i64) =
+  let num_iterations = 10i32
+  let k = 10i64
+
+  let cluster_centers =
+      kmeansSpAD k num_iterations
+                   values
+                   indices_data
+                   pointers
+  in cluster_centers
+
+-- AD version of sparse-kmeans for k=10
+
+-- ==
+-- entry: calculate_objective
+-- compiled input @ data/movielens.in.gz
+-- compiled input @ data/nytimes.in.gz
+-- compiled input @ data/scrna.in.gz

@@ -1,22 +1,23 @@
 include ../common.mk
 NAME=lstm
-
-ifeq ($(shell if lshw -C display 2>/dev/null | grep -q 'A100'; then echo yes; fi),yes)
+PRECISION=f32
+ifeq ($(GPU), A100)
 	FUTHARK_TUNING=--tuning=.tuning.a100
-	FUTHARK_TILE_SIZE=4
+	FUTHARK_TILE_SIZE=16
 	FUTHARK_REG_TILE=4
-        PRECISION=f64
-else
+else  
+ifeq ($(GPU), 2080TI)
 	FUTHARK_TUNING=--tuning=.tuning.2080ti
 	FUTHARK_TILE_SIZE=16
 	FUTHARK_REG_TILE=4
-        PRECISION=f32
+else
+        FUTHARK_BENCH_OPTIONS=
+endif
 endif
 
-.PHONY: results
-results: data lstm.json lstm_pytorch.json
+$(RESULTS): data lstm.json lstm_pytorch.json lstm_jax.json
 	make gen_results
 
 data:
 	mkdir -p data
-	python3 -c 'import lstm_pytorch; lstm_pytorch.gen_data(data_dir="data", prec="$(PRECISION)")'
+	$(PYTHON_CMD) -c 'import lstm_pytorch; lstm_pytorch.gen_data(data_dir="data", prec="$(PRECISION)")'

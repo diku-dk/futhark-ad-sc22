@@ -186,5 +186,5 @@ entry calculate_jacobian [bs][n][d][h][hx4]
 
 -- ==
 -- entry: calculate_jacobian
--- compiled input @ data/lstm-bs1024-n20-d300-h192.in output @ data/lstm-bs1024-n20-d300-h192.J
--- compiled input @ data/lstm-bs1024-n300-d80-h256.in output @ data/lstm-bs1024-n300-d80-h256.J
+-- compiled input @ data/lstm-bs1024-n20-d300-h192.in
+-- compiled input @ data/lstm-bs1024-n300-d80-h256.in

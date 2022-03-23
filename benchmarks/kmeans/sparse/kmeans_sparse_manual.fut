@@ -26,7 +26,7 @@ let initCenters [nnz][np1]
   in  cluster_centers
 
 let kmeans_seq_rows [nnz][np1]
-        (_fix_iter: bool) (threshold: f32) (num_iterations: i64) (k: i64)
+        (num_iterations: i64) (k: i64)
         (values: [nnz]f32) (indices_data: [nnz]i64) 
         (pointers: [np1]i64) =
 
@@ -43,12 +43,11 @@ let kmeans_seq_rows [nnz][np1]
     let cluster_centers =
       initCenters k columns pointers row_indices values indices_data
 
-    let (_new_membership,cluster_centers,delta,i) =
+    let (_new_membership,cluster_centers,i) =
         -- ALWAYS EXECUTE num_iterations
-        loop (membership, cluster_centers, _delta, i) =
-             (map (%k) (iota n), cluster_centers, threshold + 1, 0)
+        loop (membership, cluster_centers, i) =
+             (map (%k) (iota n), cluster_centers, 0)
         while i < num_iterations do
---        while (if fix_iter then true else delta > threshold) && i < num_iterations do
             -- For each point, find the cluster with the closest centroid.
             -- prepare sum of squares because we'll only have slight deviationsssss
             -- we assume that most differences are 0 and correct the mistakes as we go
@@ -73,7 +72,6 @@ let kmeans_seq_rows [nnz][np1]
                           in correction
                         ) cluster_centers
                   ) (iota n)
-            -- let diffs = map (\cluster -> map f32.i64 (iota k)) (iota n)
             
             let new_membership =
               map (\diff ->
@@ -110,12 +108,27 @@ let kmeans_seq_rows [nnz][np1]
                               center
                       ) new_centers center_counts
         
-            let new_delta =
-                  map2 (==) membership new_membership |>
-                  map (\b -> if b then 0 else 1) |>
-                  i64.sum
-            let new_delta = (f32.i64 new_delta) / (f32.i64 n)
-                  
-            in (new_membership, new_centers, new_delta, i+1)
+            in (new_membership, new_centers, i+1)
 
-    in (delta, i, cluster_centers)
+    in (i, cluster_centers)
+
+	    
+entry calculate_objective [nnz][np1] 
+         (values: [nnz]f32)
+         (indices_data: [nnz]i64) 
+         (pointers: [np1]i64) =
+
+  let num_iterations = 10 --250i64
+  let k = 10i64
+
+  let (_i, cluster_centers) =
+    kmeans_seq_rows num_iterations k values indices_data pointers
+
+  in cluster_centers
+      
+-- Manual version of sparse-kmeans for k=10
+-- ==
+-- entry: calculate_objective
+-- compiled input @ data/movielens.in.gz
+-- compiled input @ data/nytimes.in.gz
+-- compiled input @ data/scrna.in.gz
