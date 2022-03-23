@@ -6,10 +6,11 @@ import numpy as np
 from benchmark import Benchmark
 from jax import block_until_ready, jit
 from jax import numpy as jnp
-from jax import vjp
+from jax import grad
 from jax.lax import scan
 from jax.nn import sigmoid, tanh
 from jax.random import PRNGKey, normal, split
+import futhark_data
 
 from lstm_pytorch import gen_filename, parameters
 
@@ -57,7 +58,6 @@ def bench_all(
         times[filename] = {lstm.kind: lstm.report()}
     with open(output, "w") as f:
         json.dump(times, f, indent=2)
-    print("Benchmarks output to: " + output)
     return
 
 
@@ -99,32 +99,34 @@ class LSTM(Benchmark):
         timings = np.zeros(runs + 1)
         for i in range(runs + 1):
             start = time_ns()
-            _, self.objective = block_until_ready(
-                self.run(self.xs, self.init_state, self.weights)
+            self.loss = block_until_ready(
+                self.run(self.xs, self.init_state, self.weights, self.target)
             )
             timings[i] = (time_ns() - start) / 1000
         return timings
 
     def calculate_jacobian(self, runs):
-        run = lambda weights: self.run(self.xs, self.init_state, weights)
+        run = lambda weights: self.run(self.xs, self.init_state, weights, self.target)
 
         @jit
-        def _vjp(x):
-            primals, vjp_fn = vjp(run, x)
-            return vjp_fn(primals)
+        def _grad(x):
+            grad_run = grad(run)
+            return grad_run(x)
 
         timings = np.zeros(runs + 1)
         for i in range(runs + 1):
             start = time_ns()
-            block_until_ready(_vjp(self.weights))
+            self.jacobian = block_until_ready(_grad(self.weights))
             timings[i] = (time_ns() - start) / 1000
 
         return timings
 
     def validate(self):
-        obj = tuple(futhark_data.load(open(f"{self.filename}.F")))[0]
-        jac = tuple(futhark_data.load(open(f"{self.filename}.J")))[0]
-        assert np.allclose(obj, self.objective, rtol=1e-02, atol=1e-05)
+        loss = tuple(futhark_data.load(open(f"{self.filename}.F", "rb")))[0]
+        jac = tuple(futhark_data.load(open(f"{self.filename}.J", "rb")))[0]
+        print(f'jac: {jac}')
+        print(f'jax_jac: {self.jacobian}')
+        assert np.allclose(loss, self.loss, rtol=1e-02, atol=1e-05)
         assert np.allclose(jac, self.jacobian, rtol=1e-02, atol=1e-05)
 
 
@@ -174,34 +176,14 @@ def rnn(hid_dim=5, num_layers=2):
 
         return (jnp.stack(out_state), weights), h
 
-    def run_vmap(xs, init_state, weights):
-        # init_state = jnp.repeat(jnp.expand_dims(init_state,2), xs.shape[1], axis=2)
+    def run_vmap(xs, init_state, weights, target):
         new_state, y_hat = scan(_cell, (init_state, weights), xs)
         batch_size, steps, _ = y_hat.shape
         jnp.reshape(y_hat, (batch_size * steps, -1))
         y_hat = jnp.matmul(y_hat, weights[-1].w_out) + weights[-1].b_out
         jnp.reshape(y_hat, (batch_size, steps, -1))
-        return new_state, y_hat
+        loss = jnp.mean((y_hat - target) ** 2)
+        #return new_state, y_hat, loss
+        return loss
 
     return init, run_vmap
-
-
-if __name__ == "__main__":
-    rng_seed = PRNGKey(43)
-    hid_dim = 192
-    in_dim = 300
-    num_layers = 1
-    lengths = 20
-    num_datum = 1024
-    data_seed, init_seed = split(rng_seed)
-
-    xs = normal(data_seed, (lengths, num_datum, in_dim))  # time-major
-
-    init, run = rnn(hid_dim=hid_dim, num_layers=num_layers)
-
-    init_state, weights = init(rng_seed=rng_seed, in_dim=in_dim)
-    states, out = run(xs, init_state, weights)
-
-    primals, run_vjp = vjp(lambda weights: run(xs, init_state, weights), weights)
-    grads = run_vjp(primals)[0][0]
-    print(grads.w_ii)
