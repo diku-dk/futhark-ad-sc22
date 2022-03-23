@@ -55,12 +55,13 @@ class KMeansSparse(Benchmark):
           out = tuple(futhark_data.load(open(data_file)))[0]
           assert(np.allclose(out, self.objective.cpu().detach().numpy(), rtol=1e-02, atol=1e-05))
 
-def benchmarks(datasets = ['movielens', 'nytimes', 'scrna'], runs=10, output="kmeans_sparse_pytorch.json"):
+def benchmarks(datasets = ['movielens', 'nytimes', 'scrna'], runs=1, output="kmeans_sparse_pytorch.json"):
   set_precision("f32")
   times = {}
   for data in datasets:
     kmeans = KMeansSparse(data, runs)
     kmeans.benchmark()
+    kmeans.validate()
     times['data/' + data] = { 'pytorch' : 
                             { 'objective': kmeans.objective_time,
                               'objective_std': kmeans.objective_std,

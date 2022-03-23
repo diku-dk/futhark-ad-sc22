@@ -6,7 +6,7 @@ from scipy.sparse import csr_matrix
 import torch
 
 import jax
-from jax import numpy as jnp, jacrev, jacfwd
+from jax import numpy as jnp, jacrev, jacfwd, grad
 from jax.experimental import sparse
 from jax.experimental.sparse import sparsify
 from jax.lax import while_loop
@@ -26,6 +26,8 @@ class KMeansSparse(Benchmark):
         self.threshold = threshold
         self.k = k
         self.kind = "jax"
+        print(f'threshold: {threshold}')
+        print(f'max_iter: {max_iter}')
 
     def prepare(self):
       sp_data = data_gen(self.name)
@@ -45,7 +47,8 @@ class KMeansSparse(Benchmark):
       timings = np.zeros(runs + 1)
       for i in range(runs + 1):
           start = time_ns()
-          self.objective = (kmeans(self.max_iter, self.clusters, self.features)).block_until_ready()
+          t, iters, self.objective = jax.block_until_ready((kmeans(self.max_iter, self.clusters, self.features, self.threshold)))
+          print(f't:{t}, iters:{iters}')
           timings[i] = (time_ns() - start)/1000
       return timings
 
@@ -72,9 +75,10 @@ def get_clusters(k, values, indices, pointers, num_col):
     )
     return sp_clusters
 
-def benchmarks(datasets = ['nytimes'], runs=1, output="kmeans_sparse_jax.json"):
+def benchmarks(datasets = ['movielens', 'nytimes', 'scrna'], runs=1, output="kmeans_sparse_jax.json"):
   times = {}
   for data in datasets:
+    print(f'Benchmarking: {data}')
     kmeans = KMeansSparse(data, runs)
     kmeans.benchmark()
     times['data/' + data] = { kmeans.kind : 
@@ -104,13 +108,13 @@ def kmeans(max_iter, clusters, features, tolerance):
 
     def body(v):
         t, rmse, clusters = v
-        f_vjp = grad(partial(cost, features))
+        f_vjp = grad(partial(cost_sp, features))
         hes = grad(lambda x: jnp.vdot(f_vjp(x), jnp.ones(shape=clusters.shape)))(clusters)
         new_cluster = clusters - f_vjp(clusters) / hes
         rmse = ((new_cluster - clusters) ** 2).sum()
         return t + 1, rmse, new_cluster
 
-    t, rmse, clusters = jax.lax.while_loop(cond, body, (0, float("inf"), clusters))
+    t, rmse, clusters = while_loop(cond, sparsify(body), (0, float("inf"), clusters))
     return t, rmse, clusters
 
 def data_gen(name):
