@@ -6,11 +6,14 @@ import futhark_data
 import torch
 import torch.nn as nn
 from benchmark import Benchmark, set_precision
+import random
+import numpy as np
 
 device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 print("Using device:", device)
 
-parameters = [(1024, 20, 300, 192), (1024, 300, 80, 256)]
+#parameters = [(1024, 20, 300, 192), (1024, 300, 80, 256)]
+parameters = [(1024, 20, 300, 192)]
 
 
 def equal(m1, m2):
@@ -42,6 +45,8 @@ def read_tensors(filename):
 def gen_data(parameters=parameters, data_dir="data", prec="f32"):
     set_precision(prec)
     torch.manual_seed(0)
+    random.seed(0)
+    np.random.seed(0)
     for params in parameters:
         filename = gen_filename(*params, data_dir)
         torchLSTM = RNNLSTM(*params, filename, tensors=None, runs=None)
