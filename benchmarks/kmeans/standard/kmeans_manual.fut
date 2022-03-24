@@ -1,7 +1,7 @@
 -- ==
 -- entry: calculate_objective
 -- input @ data/kdd_cup.in.gz output @ data/kdd_cup.out
--- input @ data/random.in.gz
+-- input @ data/random.in.gz output @ data/random.out
 
 let euclid_dist_2 [d] (pt1: [d]f32) (pt2: [d]f32): f32 =
   f32.sum (map (\x->x*x) (map2 (-) pt1 pt2))
@@ -30,7 +30,7 @@ let centroids_of [n][d] (k: i64) (points: [n][d]f32) (membership: [n]i32): [k][d
   in map2 (\point n -> map (/r32 (if n == 0 then 1 else n)) point)
           cluster_sums points_in_clusters
 
-let tolerance = 1 : f32
+let tolerance = 1.0 : f32
 
 entry calculate_objective [n][d]
         (_threshold: i32) (k: i64) (max_iterations: i32)

@@ -23,7 +23,7 @@ class KMeans(Benchmark):
         self.args = data_gen(self.name, self.device)
 
     def calculate_objective(self):
-        self.iterations, self.objective = kmeans(*self.args)
+        _t, self.objective = kmeans(*self.args)
 
     def calculate_jacobian(self):
         return
@@ -31,10 +31,7 @@ class KMeans(Benchmark):
     def validate(self):
         data_file = data_dir / f"{self.name}.out"
         if data_file.exists():
-            t, out = tuple(futhark_data.load(open(data_file, "rb")))
-            print(self.iterations)
-            print(t)
-            #assert (self.iterations + 1 == t)
+            out = tuple(futhark_data.load(open(data_file, "rb")))
             assert np.allclose(
                 out, self.objective.cpu().detach().numpy(), rtol=1e-02, atol=1e-05
             )
@@ -71,7 +68,7 @@ def cost(points, centers):
 
 
 def kmeans(_, k, max_iter, features, _tolerance=1):
-    tolerance = 1.05
+    tolerance = 1.0
     clusters = torch.flip(features[-int(k) :], (0,))
     t = 0
     converged = False
