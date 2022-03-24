@@ -12,8 +12,7 @@ import numpy as np
 device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 print("Using device:", device)
 
-#parameters = [(1024, 20, 300, 192), (1024, 300, 80, 256)]
-parameters = [(1024, 20, 300, 192)]
+parameters = [(1024, 20, 300, 192), (1024, 300, 80, 256)]
 
 
 def equal(m1, m2):
