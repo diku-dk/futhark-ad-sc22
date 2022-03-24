@@ -27,4 +27,3 @@ latex: $(RESULTS)
 
 clean:
 	rm -rf *.json *.c *.actual *.expected __pycache__
-	find . -executable -type f -delete
