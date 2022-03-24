@@ -225,7 +225,7 @@ class NaiveLSTM(nn.Module, Benchmark):
 
 
 class RNNLSTM(nn.Module, Benchmark):
-    def __init__(self, bs, n, h, d, filename, tensors, runs):
+    def __init__(self, bs, n, d, h, filename, tensors, runs):
 
         super(RNNLSTM, self).__init__()
         self.num_layers = 1
