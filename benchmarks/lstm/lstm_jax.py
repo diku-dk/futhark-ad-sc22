@@ -48,6 +48,7 @@ def bench_all(
     output,
     parameters=parameters,
     data_dir="data",
+    prec="f32",
 ):
     times = {}
     for params in parameters:

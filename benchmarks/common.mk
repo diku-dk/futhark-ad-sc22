@@ -7,9 +7,10 @@ FUTHARK_BACKEND=cuda
 FUTHARK_BENCH_OPTIONS=--pass-option=--default-tile-size=$(FUTHARK_TILE_SIZE) --pass-option=--default-reg-tile=$(FUTHARK_REG_TILE)
 PYTHONPATH=../..:..:$PYTHONPATH
 PYTHON_CMD=PYTHONPATH=../../:../ $(PYTHON)
+PRECISION=f32
 
 %.json: %.py
-	$(PYTHON_CMD) -c 'import $(basename  $<); $(basename $<).bench_all(runs=$(RUNS), output="$(basename $<).json")'
+	$(PYTHON_CMD) -c 'import $(basename  $<); $(basename $<).bench_all(runs=$(RUNS), output="$(basename $<).json", prec="$(PRECISION)")'
 
 %.json: %.fut
 	$(FUTHARK) bench $< $(FUTHARK_TUNING) $(FUTHARK_BENCH_OPTIONS) -r $(RUNS) --backend=$(FUTHARK_BACKEND) --json $@

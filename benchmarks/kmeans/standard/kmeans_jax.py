@@ -46,7 +46,7 @@ class KMeans(Benchmark):
             assert np.allclose(out, self.objective, rtol=1e-02, atol=1e-05)
 
 
-def bench_all(runs, output, datasets=["kdd_cup", "random"]):
+def bench_all(runs, output, datasets=["kdd_cup", "random"], prec="f32"):
     times = {}
     for data in datasets:
         kmeans = KMeans(data, runs)

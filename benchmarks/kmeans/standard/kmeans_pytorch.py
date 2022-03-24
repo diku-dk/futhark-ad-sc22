@@ -37,8 +37,8 @@ class KMeans(Benchmark):
             )
 
 
-def bench_all(runs, output, datasets=["kdd_cup", "random"]):
-    set_precision("f32")
+def bench_all(runs, output, datasets=["kdd_cup", "random"], prec="f32"):
+    set_precision(prec)
     times = {}
     for data in datasets:
         kmeans = KMeans(data, runs, "cuda")
