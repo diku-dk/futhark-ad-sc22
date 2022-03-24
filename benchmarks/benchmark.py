@@ -183,8 +183,8 @@ def latex(name, jac_speedup, obj_speedup, paths=get_results()):
         d1 = d["data/lstm-bs1024-n300-d80-h256"]
         print(
             f"""
-           \\multirow{{2}}{{*}}{{\\rotatebox[origin=c]{{90}}{{\\scriptsize\\textbf{{gpu}}}}}}   & \\multicolumn{{1}}{{|c}}{{$\\mathbf{{D_0}}$}} & \\multicolumn{{1}}{{c|}}{{${ms(d0['naive']['jacobian'])}$}}  &  {r(d0['futhark']['speedup_naive'])} & \\multicolumn{{1}}{{c|}}{{{r(d0['futhark']['speedup_naive'])}}} & {r(d0['naive']['overhead'])} & {r(d0['futhark']['overhead'])}  & {r(d0['torch.nn.LSTM']['overhead'])} \\\\
-                                                                                                & \\multicolumn{{1}}{{|c}}{{$\\mathbf{{D_1}}$}} & \\multicolumn{{1}}{{c|}}{{${ms(d1['naive']['jacobian'])}$}}  &  {r(d1['futhark']['speedup_naive'])} & \\multicolumn{{1}}{{c|}}{{{r(d1['futhark']['speedup_naive'])}}} & {r(d1['naive']['overhead'])} & {r(d1['futhark']['overhead'])}  & {r(d1['torch.nn.LSTM']['overhead'])} \\\\\\hline"""
+           \\multicolumn{{1}}{{|c}}{{$\\mathbf{{D_0}}$}} & \\multicolumn{{1}}{{c|}}{{${ms(d0['pytorch']['jacobian'])}$}}  &  {r(d0['futhark']['jac_speedup_pytorch'])} & {r(d0['jax']['jac_speedup_pytorch'])} & {r(d0['torch.nn.LSTM']['jac_speedup_pytorch'])} & {r(d0['pytorch']['overhead'])} & {r(d0['futhark']['overhead'])}  & {r(d0['jax']['overhead'])} & {r(d0['torch.nn.LSTM']['overhead'])} \\\\
+           \\multicolumn{{1}}{{|c}}{{$\\mathbf{{D_1}}$}} & \\multicolumn{{1}}{{c|}}{{${ms(d1['pytorch']['jacobian'])}$}}  &  {r(d1['futhark']['jac_speedup_pytorch'])} & {r(d1['jax']['jac_speedup_pytorch'])} & {r(d1['torch.nn.LSTM']['jac_speedup_pytorch'])} & {r(d1['pytorch']['overhead'])} & {r(d1['futhark']['overhead'])}  & {r(d1['jax']['overhead'])} & {r(d1['torch.nn.LSTM']['overhead'])} \\\\\\hline"""
         )
 
     elif name is "kmeans":

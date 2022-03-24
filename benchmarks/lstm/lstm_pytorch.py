@@ -61,7 +61,7 @@ def bench_all(runs, output, parameters=parameters, data_dir="data", prec="f32"):
         naiveLSTM.benchmark()
         assert equal(torchLSTM, naiveLSTM)
         times[filename] = {
-            "naive": naiveLSTM.report(),
+            "pytorch": naiveLSTM.report(),
             "torch.nn.LSTM": torchLSTM.report(),
         }
     with open(output, "w") as f:
