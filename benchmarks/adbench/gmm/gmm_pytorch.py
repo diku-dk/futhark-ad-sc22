@@ -15,12 +15,12 @@ device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 print("Using device:", device)
 
 datasets = [
-    "data/1k/gmm_d64_K200"
-#    "data/1k/gmm_d128_K200",
-#    "data/10k/gmm_d32_K200",
-#    "data/10k/gmm_d64_K25",
-#    "data/10k/gmm_d128_K25",
-#    "data/10k/gmm_d128_K200",
+    "data/1k/gmm_d64_K200",
+    "data/1k/gmm_d128_K200",
+    "data/10k/gmm_d32_K200",
+    "data/10k/gmm_d64_K25",
+    "data/10k/gmm_d128_K25",
+    "data/10k/gmm_d128_K200",
 ]
 
 

@@ -13,7 +13,7 @@ PRECISION=f32
 	$(PYTHON_CMD) -c 'import $(basename  $<); $(basename $<).bench_all(runs=$(RUNS), output="$(basename $<).json", prec="$(PRECISION)")'
 
 %.json: %.fut
-	sed -E -r 's/f64|f32/$(PRECISION)/' $<
+	sed -E -r -i 's/f64|f32/$(PRECISION)/' $<
 	$(FUTHARK) bench $< $(FUTHARK_TUNING) $(FUTHARK_BENCH_OPTIONS) -r $(RUNS) --backend=$(FUTHARK_BACKEND) --json $@
 	$(PYTHON_CMD) -c 'import benchmark; benchmark.process_futhark("$(NAME)", "$(basename $<).json", "$<", "$(patsubst *_%, %, $(basename $<))")'
 
