@@ -1,11 +1,11 @@
-type real= f64
-let zero = 0f64
-let sum  = f64.sum
-let log  = f64.log
-let tanh = f64.tanh
-let exp  = f64.exp
-let fromi64 = f64.i64
-let realbool = f64.bool
+type real= f32
+let zero = 0f32
+let sum  = f32.sum
+let log  = f32.log
+let tanh = f32.tanh
+let exp  = f32.exp
+let fromi64 = f32.i64
+let realbool = f32.bool
 
 let dotproduct [n] (a: [n]real) (b: [n]real) : real =
     map2 (*) a b |> sum
