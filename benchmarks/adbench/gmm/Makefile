@@ -1,17 +1,20 @@
 include ../../common.mk
 NAME=gmm
-
-ifeq ($(shell if lshw -C display 2>/dev/null | grep -q 'A100'; then echo yes; fi),yes)
+ifeq ($(GPU), A100)
 	FUTHARK_TUNING=--tuning=.tuning.a100
 	FUTHARK_TILE_SIZE=16
-	FUTHARK_REG_TILE=3
-        PRECISION=f64
-else
-	FUTHARK_TUNING=--tuning=.tuning.2080ti
-	FUTHARK_TILE_SIZE=8
 	FUTHARK_REG_TILE=4
-        PRECISION=f32
+        PRECISION=f64
+else  
+ifeq ($(GPU), 2080TI)
+	FUTHARK_TUNING=--tuning=.tuning.2080ti
+	FUTHARK_TILE_SIZE=16
+	FUTHARK_REG_TILE=4
+else
+        FUTHARK_BENCH_OPTIONS=
 endif
+endif
+
 
 .PHONY: results
 results: data gmm.json gmm_pytorch.json

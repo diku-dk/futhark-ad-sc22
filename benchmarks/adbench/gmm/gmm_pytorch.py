@@ -9,26 +9,27 @@ import gzip
 from benchmark import Benchmark, set_precision
 import os
 import json
+from os import path
 
 device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 print("Using device:", device)
 
 datasets = [
-    "data/1k/gmm_d64_K200",
-    "data/1k/gmm_d128_K200",
-    "data/10k/gmm_d32_K200",
-    "data/10k/gmm_d64_K25",
-    "data/10k/gmm_d128_K25",
-    "data/10k/gmm_d128_K200",
+    "data/1k/gmm_d64_K200"
+#    "data/1k/gmm_d128_K200",
+#    "data/10k/gmm_d32_K200",
+#    "data/10k/gmm_d64_K25",
+#    "data/10k/gmm_d128_K25",
+#    "data/10k/gmm_d128_K200",
 ]
 
 
-def benchmarks(paths=datasets, runs=10, output="gmm_pytorch.json", prec="f64"):
+def bench_all(paths=datasets, runs=10, output="gmm_pytorch.json", prec="f64"):
     set_precision(prec)
     times = {}
     for path in paths:
         g = futhark_data.load(gzip.open(path + ".in.gz"))
-        gmm = PyTorchGMM(runs, list(g))
+        gmm = PyTorchGMM(runs, list(g), path)
         gmm.benchmark()
         times[path] = {"pytorch": gmm.report()}
     with open(output, "w") as f:
@@ -38,28 +39,36 @@ def benchmarks(paths=datasets, runs=10, output="gmm_pytorch.json", prec="f64"):
 
 
 class PyTorchGMM(torch.nn.Module, Benchmark):
-    def __init__(self, runs, inputs):
+    def __init__(self, runs, inputs, data):
         super().__init__()
         self.runs = runs
         self.inputs = to_torch_tensors((inputs[0], inputs[1], inputs[2]), grad_req=True)
 
         self.params = to_torch_tensors((inputs[3], inputs[4], inputs[5]))
         self.kind = "pytorch"
+        self.data = data
 
     def prepare(self):
         self.objective = torch.zeros(1, device=device)
-        self.gradient = torch.empty(0, device=device)
+        self.jacobian = torch.empty(0, device=device)
 
     def output(self):
-        return self.objective.item(), self.gradient.numpy()
+        return self.objective.item(), self.jacobian.numpy()
 
     def calculate_objective(self):
         self.objective = gmm_objective(*self.inputs, *self.params)
 
     def calculate_jacobian(self):
-        self.objective, self.gradient = torch_jacobian(
+        self.objective, self.jacobian = torch_jacobian(
             gmm_objective, self.inputs, self.params
         )
+
+    def validate(self):
+        obj_out = self.data + ".F"
+        if path.exists(obj_out):
+            obj = torch.tensor(tuple(futhark_data.load(open(obj_out)))[0])
+            assert(torch.allclose(self.objective, obj, 1e-03, 1e-05))
+        return
 
 
 def log_wishart_prior(p, wishart_gamma, wishart_m, sum_qs, Qdiags, icf):
