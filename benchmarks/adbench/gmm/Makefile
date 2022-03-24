@@ -16,8 +16,7 @@ endif
 endif
 
 
-.PHONY: results
-results: data gmm.json gmm_pytorch.json
+$(RESULTS): data lstm.json lstm_pytorch.json lstm_jax.json
 	make gen_results
 
 data:
