@@ -41,7 +41,7 @@ class Benchmark(ABC):
                 end.record()
                 torch.cuda.synchronize()
                 timings[i] = start.elapsed_time(end) * 1000
-        elif self.kind == "jax":
+        elif self.kind == "jax" or self.kind == "jax-vmap":
             timings = f(self.runs)
         return float(timings[1:].mean()), float(timings[1:].std())
 
