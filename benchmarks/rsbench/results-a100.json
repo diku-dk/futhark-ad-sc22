@@ -1,0 +1,16 @@
+{
+  "data/large": {
+    "futhark": {
+      "jacobian": 8643801.0,
+      "objective": 1906636.0,
+      "overhead": 4.533534979933243
+    }
+  },
+  "data/small": {
+    "futhark": {
+      "jacobian": 795673.8,
+      "objective": 276168.8,
+      "overhead": 2.8811140143274696
+    }
+  }
+}
