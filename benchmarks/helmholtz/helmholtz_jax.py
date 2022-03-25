@@ -49,8 +49,16 @@ class Helmholtz(Benchmark):
             timings[i] = (time_ns() - start) / 1000
         return timings
 
+    def validate(self):
+        data_file = data_dir / f"{self.name}.out"
+        if data_file.exists():
+            out = tuple(futhark_data.load(open(data_file)))[0]
+            assert np.allclose(
+                out, self.objective, rtol=1e-02, atol=1e-02
+            )
 
-def benchmarks(
+
+def bench_all(
     ns=[50], runs=10, output="helmholtz_pytorch.json", data_dir="data", prec="f32"
 ):
     set_precision(prec)
