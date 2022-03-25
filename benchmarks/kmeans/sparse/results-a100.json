@@ -1,0 +1,86 @@
+{
+  "data/movielens": {
+    "futhark": {
+      "obj_speedup_jax": 2.415403654824641,
+      "obj_speedup_manual": 0.385995265208876,
+      "obj_speedup_pytorch": 9.254014304051681,
+      "objective": 158486.4
+    },
+    "jax": {
+      "obj_speedup_futhark": 0.41400947539453825,
+      "obj_speedup_manual": 0.1598056972539024,
+      "obj_speedup_pytorch": 3.831249607313989,
+      "objective": 382808.6298,
+      "objective_std": 106.59531497378077
+    },
+    "manual": {
+      "obj_speedup_futhark": 2.5907053534940743,
+      "obj_speedup_jax": 6.257599179403351,
+      "obj_speedup_pytorch": 23.97442439881743,
+      "objective": 61175.0
+    },
+    "pytorch": {
+      "obj_speedup_futhark": 0.10806121183129903,
+      "obj_speedup_jax": 0.26101144600209947,
+      "obj_speedup_manual": 0.0417111161196148,
+      "objective": 1466635.4125976562,
+      "objective_std": 1054.1554388273214
+    }
+  },
+  "data/nytimes": {
+    "futhark": {
+      "obj_speedup_jax": 4.530203644250523,
+      "obj_speedup_manual": 0.28472356652401626,
+      "obj_speedup_pytorch": 17.54965432549825,
+      "objective": 298585.4
+    },
+    "jax": {
+      "obj_speedup_futhark": 0.22074062857398102,
+      "obj_speedup_manual": 0.06285005904433705,
+      "obj_speedup_pytorch": 3.8739217270665685,
+      "objective": 1352652.6672000003,
+      "objective_std": 282.00383465789645
+    },
+    "manual": {
+      "obj_speedup_futhark": 3.5121785393751406,
+      "obj_speedup_jax": 15.910884018335741,
+      "obj_speedup_pytorch": 61.63751929546706,
+      "objective": 85014.3
+    },
+    "pytorch": {
+      "obj_speedup_futhark": 0.05698117931286428,
+      "obj_speedup_jax": 0.2581363461768303,
+      "obj_speedup_manual": 0.016223884598703213,
+      "objective": 5240070.556640625,
+      "objective_std": 7994.505918699952
+    }
+  },
+  "data/scrna": {
+    "futhark": {
+      "obj_speedup_jax": 15.446804592666217,
+      "obj_speedup_manual": 0.27211893165638534,
+      "obj_speedup_pytorch": 16.1567307925238,
+      "objective": 576889.3
+    },
+    "jax": {
+      "obj_speedup_futhark": 0.06473830843142644,
+      "obj_speedup_manual": 0.01761651932760133,
+      "obj_speedup_pytorch": 1.0459594212899306,
+      "objective": 8911096.2887,
+      "objective_std": 2133.1835213648046
+    },
+    "manual": {
+      "obj_speedup_futhark": 3.6748637586992183,
+      "obj_speedup_jax": 56.764902385297724,
+      "obj_speedup_pytorch": 59.373784448505404,
+      "objective": 156982.5
+    },
+    "pytorch": {
+      "obj_speedup_futhark": 0.06189370936741298,
+      "obj_speedup_jax": 0.9560600341137029,
+      "obj_speedup_manual": 0.016842450069311232,
+      "objective": 9320645.1171875,
+      "objective_std": 3453.330033373146
+    }
+  }
+}
