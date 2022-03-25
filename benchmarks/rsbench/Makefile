@@ -1,6 +1,7 @@
 include ../common.mk
 NAME=rsbench
-RUNS=1
+RUNS=5
+PRECISION=f64
 
-.PHONY: results
-results: $(NAME).json
+$(RESULTS): $(NAME).json
+	make gen_results
