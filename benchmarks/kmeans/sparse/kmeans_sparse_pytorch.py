@@ -55,11 +55,11 @@ class KMeansSparse(Benchmark):
         if data_file.exists():
             out = tuple(futhark_data.load(open(data_file)))[0]
             assert np.allclose(
-                out, self.objective.cpu().detach().numpy(), rtol=1e-02, atol=1e-05
+                out, self.objective.cpu().detach().numpy(), rtol=1e-02, atol=1e-02
             )
 
 
-def bench_all(runs, output, datasets=["movielens", "nytimes", "scrna"]):
+def bench_all(runs, output, datasets=["movielens", "nytimes", "scrna"], prec="f32"):
     set_precision("f32")
     times = {}
     for data in datasets:

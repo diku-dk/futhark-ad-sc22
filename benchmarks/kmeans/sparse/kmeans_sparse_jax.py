@@ -56,7 +56,7 @@ class KMeansSparse(Benchmark):
         if data_file.exists():
             out = tuple(futhark_data.load(open(data_file)))[0]
             assert np.allclose(
-                out, self.objective.cpu().detach().numpy(), rtol=1e-02, atol=1e-05
+                out, self.objective, rtol=1e-02, atol=1e-02
             )
 
 
@@ -73,7 +73,7 @@ def get_clusters(k, values, indices, pointers, num_col):
     return sp_clusters
 
 
-def bench_all(runs, output, datasets=["movielens", "nytimes", "scrna"]):
+def bench_all(runs, output, datasets=["movielens", "nytimes", "scrna"], prec="f32"):
     times = {}
     for data in datasets:
         kmeans = KMeansSparse(data, runs)
