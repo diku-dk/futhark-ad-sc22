@@ -24,7 +24,7 @@ def equal(m1, m2):
     return (
         torch.allclose(m1.objective, m2.objective, 1e-03, 1e-03)
         and torch.allclose(m1.loss, m2.loss, 1e-03, 1e-03)
-        #and jacobians_equal
+        # and jacobians_equal
     )
 
 
@@ -194,7 +194,7 @@ class NaiveLSTM(nn.Module, Benchmark):
         # get predictions (forward pass)
         y_hat, h, c = self.calculate_objective()
 
-        #self.loss = torch.mean((y_hat - self.target) ** 2)
+        # self.loss = torch.mean((y_hat - self.target) ** 2)
         # backprop
         self.loss.backward(gradient=torch.tensor(1.0))
 
@@ -283,8 +283,8 @@ class RNNLSTM(nn.Module, Benchmark):
     def calculate_jacobian(self):
         self.zero_grad()
         self.forward(self.inputs)
-        #loss_function = nn.MSELoss(reduction="mean")
-        #self.loss = loss_function(self.objective, self.target)
+        # loss_function = nn.MSELoss(reduction="mean")
+        # self.loss = loss_function(self.objective, self.target)
         self.loss.backward(gradient=torch.tensor(1.0))
         self.jacobian = {
             n: p.grad

@@ -2,9 +2,10 @@ import json
 from collections import namedtuple
 from time import time_ns
 
+import jax.random
 import numpy as np
 from benchmark import Benchmark
-from jax import block_until_ready, jit
+from jax import block_until_ready, jit, vmap
 from jax import numpy as jnp
 from jax import grad
 from jax.lax import scan
@@ -125,8 +126,8 @@ class LSTM(Benchmark):
     def validate(self):
         loss = tuple(futhark_data.load(open(f"{self.filename}.F", "rb")))[0]
         assert np.allclose(loss, self.loss, rtol=1e-02, atol=1e-05)
-        #jac = tuple(futhark_data.load(open(f"{self.filename}.J", "rb")))[0]
-        #assert np.allclose(jac, self.jacobian, rtol=1e-02, atol=1e-05)
+        # jac = tuple(futhark_data.load(open(f"{self.filename}.J", "rb")))[0]
+        # assert np.allclose(jac, self.jacobian, rtol=1e-02, atol=1e-05)
 
 
 def _lstm_cell(state, weights: LSTM_WEIGHTS, input):
@@ -146,6 +147,27 @@ def _lstm_cell(state, weights: LSTM_WEIGHTS, input):
     return jnp.stack((h, c)), h
 
 
+def _vmap_mul(a, b):
+    return vmap(lambda alpha: vmap(lambda beta: jnp.sum(alpha * beta))(b.T))(a)
+
+
+def _lstm_vmap_cell(state, weights: LSTM_WEIGHTS, input):
+    h, c = state
+    i = sigmoid(
+        _vmap_mul(input, weights.w_ii) + _vmap_mul(h, weights.w_hi) + weights.bi
+    )
+    f = sigmoid(
+        _vmap_mul(input, weights.w_if) + _vmap_mul(h, weights.w_hf) + weights.bf
+    )
+    o = sigmoid(
+        _vmap_mul(input, weights.w_io) + _vmap_mul(h, weights.w_ho) + weights.bo
+    )
+    g = tanh(_vmap_mul(input, weights.w_ig) + _vmap_mul(c, weights.w_hg) + weights.bg)
+    c = f * c + i * g
+    h = o * tanh(c)
+    return jnp.stack((h, c)), h
+
+
 def _init_lstm_weights(rng_key, in_dim, hid_dim):
     in_key, hid_key = split(rng_key)
     in_weights = normal(in_key, (4, in_dim, hid_dim))
@@ -154,7 +176,7 @@ def _init_lstm_weights(rng_key, in_dim, hid_dim):
     return LSTM_WEIGHTS(*in_weights, *hid_weights, *bias)
 
 
-def rnn(hid_dim=5, num_layers=2):
+def rnn(hid_dim=5, num_layers=2, lstm_cell=_lstm_vmap_cell):
     def init(rng_seed, in_dim):
         weight_key, state_key = split(rng_seed)
         keys = split(weight_key, num_layers)
@@ -170,7 +192,7 @@ def rnn(hid_dim=5, num_layers=2):
         out_state = []
         h = x
         for i in range(num_layers):
-            new_state, h = _lstm_cell(states[i], weights[i], h)
+            new_state, h = lstm_cell(states[i], weights[i], h)
             out_state.append(new_state)
 
         return (jnp.stack(out_state), weights), h
@@ -182,7 +204,7 @@ def rnn(hid_dim=5, num_layers=2):
         y_hat = jnp.matmul(y_hat, weights[-1].w_out) + weights[-1].b_out
         jnp.reshape(y_hat, (batch_size, steps, -1))
         loss = jnp.mean((y_hat - target) ** 2)
-        #return new_state, y_hat, loss
+        # return new_state, y_hat, loss
         return loss
 
     return init, run_vmap
