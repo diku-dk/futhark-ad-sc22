@@ -82,7 +82,7 @@ def bench_all(
 
 def helmholtz(R, T, b, A, xs):
     bxs = jnp.dot(b, xs)
-    term1 = sum(jnp.log(xs / (1 - bxs)))
+    term1 = jnp.sum(jnp.log(xs / (1 - bxs)))
     term2 = jnp.dot(xs, jnp.matmul(A, xs)) / (math.sqrt(8) * bxs)
     term3 = jnp.log((1 + (1 + math.sqrt(2)) * bxs) / (1 + (1 - math.sqrt(2)) * bxs))
     return R * T * term1 - term2 * term3

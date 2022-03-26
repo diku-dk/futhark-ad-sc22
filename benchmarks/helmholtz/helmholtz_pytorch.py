@@ -68,7 +68,7 @@ def bench_all(
 
 def helmholtz(R, T, b, A, xs):
     bxs = torch.dot(b, xs)
-    term1 = sum(torch.log(xs / (1 - bxs)))
+    term1 = torch.sum(torch.log(xs / (1 - bxs)))
     term2 = torch.dot(xs, torch.matmul(A, xs)) / (math.sqrt(8) * bxs)
     term3 = torch.log((1 + (1 + math.sqrt(2)) * bxs) / (1 + (1 - math.sqrt(2)) * bxs))
     return R * T * term1 - term2 * term3
