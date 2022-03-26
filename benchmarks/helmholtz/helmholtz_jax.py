@@ -73,7 +73,7 @@ def bench_all(
     for n in ns:
         helmholtz = Helmholtz(n, runs)
         helmholtz.benchmark()
-        times[f"data/n{n}"] = {"pytorch": helmholtz.report()}
+        times[f"data/n{n}"] = {self.kind : helmholtz.report()}
     with open(output, "w") as f:
         json.dump(times, f, indent=2)
     print("Benchmarks output to: " + output)
