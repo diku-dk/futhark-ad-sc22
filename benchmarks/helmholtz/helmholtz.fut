@@ -18,9 +18,6 @@ def helmholtz [n] (R: f32) (T: f32) (b: [n]f32) (A: [n][n]f32) (xs: [n]f32) : f3
   let term3 = (1 + (1 + f32.sqrt(2)) * bxs) / (1 + (1 - f32.sqrt(2)) * bxs) |> f32.log
   in R * T * term1 - term2 * term3
 
-entry foo [n] (R: f32) (T: f32) (b: [n]f32) (A: [n][n]f32) (xs: [n]f32)  =
-  (R, T, b, A, xs)
-				  
 entry calculate_objective = helmholtz
 											      
 entry calculate_jacobian [n] (R: f32) (T: f32) (b: [n]f32) (A: [n][n]f32) (xs: [n]f32) =
