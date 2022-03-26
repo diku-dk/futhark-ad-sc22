@@ -66,7 +66,7 @@ class Helmholtz(Benchmark):
                 )
 
 def bench_all(
-    ns=[10000], runs=10, output="helmholtz_pytorch.json", data_dir="data", prec="f32"
+    ns=[10000], runs=10, output="helmholtz_jax.json", data_dir="data", prec="f32"
 ):
     set_precision(prec)
     times = {}
