@@ -55,20 +55,23 @@ def bench_all(
     for params in parameters:
         filename = gen_filename(*params, directory="data")
         tensors = read_tensors(filename)
-        lstm = LSTM(tensors, runs, filename)
+        lstm = LSTM(tensors, runs, filename, _lstm_cell, "jax")
+        lstm_vmap = LSTM(tensors, runs, filename, _lstm_vmap_cell, "jax-vmap")
         lstm.benchmark()
-        times[filename] = {lstm.kind: lstm.report()}
+        lstm_vmap.benchmark()
+        times[filename] = {lstm.kind: lstm.report(),
+                           lstm_vmap.kind: lstm_vmap.report()}
     with open(output, "w") as f:
         json.dump(times, f, indent=2)
     return
 
 
 class LSTM(Benchmark):
-    def __init__(self, tensors, runs, filename, hid_dim=5):
+    def __init__(self, tensors, runs, filename, cell, kind, hid_dim=5):
         self.runs = runs
-        self.kind = "jax"
+        self.kind = kind
         self.tensors = tensors
-        _, self.run = rnn(hid_dim=hid_dim, num_layers=1)
+        _, self.run = rnn(hid_dim=hid_dim, num_layers=1, lstm_cell=cell)
         self.hid_dim = hid_dim
         self.filename = filename
 
@@ -128,6 +131,7 @@ class LSTM(Benchmark):
         assert np.allclose(loss, self.loss, rtol=1e-02, atol=1e-05)
         # jac = tuple(futhark_data.load(open(f"{self.filename}.J", "rb")))[0]
         # assert np.allclose(jac, self.jacobian, rtol=1e-02, atol=1e-05)
+
 
 
 def _lstm_cell(state, weights: LSTM_WEIGHTS, input):

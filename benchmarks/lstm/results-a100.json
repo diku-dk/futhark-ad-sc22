@@ -1,82 +1,112 @@
 {
   "data/lstm-bs1024-n20-d300-h192": {
     "futhark": {
-      "jac_speedup_jax": 0.5648854817848675,
-      "jac_speedup_pytorch": 3.075763078875829,
-      "jac_speedup_torch.nn.LSTM": 0.24744319964596156,
+      "jac_speedup_jax": 0.5439128314291873,
+      "jac_speedup_jax-vmap": 5.307337283089028,
+      "jac_speedup_pytorch": 2.945535474359077,
+      "jac_speedup_torch.nn.LSTM": 0.24933714076706398,
       "jacobian": 14844.8,
       "objective": 7053.7,
       "overhead": 2.104540879254859
     },
     "jax": {
-      "jac_speedup_futhark": 1.7702703153926032,
-      "jac_speedup_pytorch": 5.444932075714437,
-      "jac_speedup_torch.nn.LSTM": 0.43804135107901127,
-      "jacobian": 8385.612000000001,
-      "jacobian_std": 20.13344964977441,
-      "objective": 4536.7072,
-      "objective_std": 118.99951758204742,
-      "overhead": 1.8483917145898243
+      "jac_speedup_futhark": 1.8385298934250114,
+      "jac_speedup_jax-vmap": 9.75769824944826,
+      "jac_speedup_pytorch": 5.415455021752985,
+      "jac_speedup_torch.nn.LSTM": 0.45841378684136724,
+      "jacobian": 8074.2771999999995,
+      "jacobian_std": 41.71453911240061,
+      "objective": 4391.0412,
+      "objective_std": 73.84449197983568,
+      "overhead": 1.8388069781718286
+    },
+    "jax-vmap": {
+      "jac_speedup_futhark": 0.18841840016204328,
+      "jac_speedup_jax": 0.10248318552549461,
+      "jac_speedup_pytorch": 0.5549930816992825,
+      "jac_speedup_torch.nn.LSTM": 0.046979705164308376,
+      "jacobian": 78786.3605,
+      "jacobian_std": 12351.125538070093,
+      "objective": 80028.51460000001,
+      "objective_std": 124.3108666627325,
+      "overhead": 0.9844786060792385
     },
     "pytorch": {
-      "jac_speedup_futhark": 0.3251225710029309,
-      "jac_speedup_jax": 0.18365702016012544,
-      "jac_speedup_torch.nn.LSTM": 0.08044936924608655,
-      "jacobian": 45659.0877532959,
-      "jacobian_std": 484.6784453848425,
-      "objective": 11052.995204925537,
-      "objective_std": 3815.0250135535643,
-      "overhead": 4.130924415216327
+      "jac_speedup_futhark": 0.33949684487082654,
+      "jac_speedup_jax": 0.18465669015496683,
+      "jac_speedup_jax-vmap": 1.8018242622740295,
+      "jac_speedup_torch.nn.LSTM": 0.08464917259953135,
+      "jacobian": 43725.885009765625,
+      "jacobian_std": 597.494773145438,
+      "objective": 10757.804775238037,
+      "objective_std": 3446.033630220169,
+      "overhead": 4.064573202742295
     },
     "torch.nn.LSTM": {
-      "jac_speedup_futhark": 4.041331511356088,
-      "jac_speedup_jax": 2.2828894978447503,
-      "jac_speedup_pytorch": 12.430178252126506,
-      "jacobian": 3673.24481010437,
-      "jacobian_std": 76.04917935557678,
-      "objective": 1581.5584182739258,
-      "objective_std": 410.6705273506253,
-      "overhead": 2.3225476641661205
+      "jac_speedup_futhark": 4.01063394295606,
+      "jac_speedup_jax": 2.1814352637392362,
+      "jac_speedup_jax-vmap": 21.28578705427305,
+      "jac_speedup_pytorch": 11.813464553645694,
+      "jacobian": 3701.359987258911,
+      "jacobian_std": 350.06907518876017,
+      "objective": 1481.6447973251343,
+      "objective_std": 124.26354730060358,
+      "overhead": 2.4981426006699494
     }
   },
   "data/lstm-bs1024-n300-d80-h256": {
     "futhark": {
-      "jac_speedup_jax": 0.5179828142724391,
-      "jac_speedup_pytorch": 3.3658723871187823,
-      "jac_speedup_torch.nn.LSTM": 0.1388675591170179,
+      "jac_speedup_jax": 0.5702109640442342,
+      "jac_speedup_jax-vmap": 3.4274199534600274,
+      "jac_speedup_pytorch": 3.2162687403405243,
+      "jac_speedup_torch.nn.LSTM": 0.1491594597608137,
       "jacobian": 221358.1,
       "objective": 56199.9,
       "overhead": 3.9387632362335165
     },
     "jax": {
-      "jac_speedup_futhark": 1.9305659810443796,
-      "jac_speedup_pytorch": 6.49803872710816,
-      "jac_speedup_torch.nn.LSTM": 0.26809298550198407,
-      "jacobian": 114659.69159999999,
-      "jacobian_std": 110.2852371899329,
-      "objective": 32816.2922,
-      "objective_std": 343.61648102086167,
-      "overhead": 3.493986794766533
+      "jac_speedup_futhark": 1.7537368852178452,
+      "jac_speedup_jax-vmap": 6.01079279351448,
+      "jac_speedup_pytorch": 5.640489122708314,
+      "jac_speedup_torch.nn.LSTM": 0.2615864463617059,
+      "jacobian": 126220.8156,
+      "jacobian_std": 34.06262159082845,
+      "objective": 31215.1914,
+      "objective_std": 121.14056370448378,
+      "overhead": 4.043570131689149
+    },
+    "jax-vmap": {
+      "jac_speedup_futhark": 0.29176465492373826,
+      "jac_speedup_jax": 0.16636740515809811,
+      "jac_speedup_pytorch": 0.9383935391674595,
+      "jac_speedup_torch.nn.LSTM": 0.04351945830572503,
+      "jacobian": 758687.1688000001,
+      "jacobian_std": 1516.7240894959634,
+      "objective": 1084038.0806,
+      "objective_std": 2280.562895645619,
+      "overhead": 0.699871325904047
     },
     "pytorch": {
-      "jac_speedup_futhark": 0.29709979612626053,
-      "jac_speedup_jax": 0.1538925885172483,
-      "jac_speedup_torch.nn.LSTM": 0.041257523502217446,
-      "jacobian": 745063.1164550781,
-      "jacobian_std": 9556.811521888025,
-      "objective": 171734.85870361328,
-      "objective_std": 90300.27281571149,
-      "overhead": 4.338450108960913
+      "jac_speedup_futhark": 0.3109192921155352,
+      "jac_speedup_jax": 0.1772895892971502,
+      "jac_speedup_jax-vmap": 1.0656509857124523,
+      "jac_speedup_torch.nn.LSTM": 0.046376553641167856,
+      "jacobian": 711947.1374511719,
+      "jacobian_std": 3055.1161178084326,
+      "objective": 161314.4500732422,
+      "objective_std": 80152.01853288547,
+      "overhead": 4.4134120478848855
     },
     "torch.nn.LSTM": {
-      "jac_speedup_futhark": 7.201105905212474,
-      "jac_speedup_jax": 3.730049102655837,
-      "jac_speedup_pytorch": 24.23800352307267,
-      "jacobian": 30739.45903778076,
-      "jacobian_std": 243.29353913501788,
-      "objective": 16950.748443603516,
-      "objective_std": 942.5154602164909,
-      "overhead": 1.8134573314006388
+      "jac_speedup_futhark": 6.704234525946668,
+      "jac_speedup_jax": 3.8228280322186894,
+      "jac_speedup_jax-vmap": 22.97822718690524,
+      "jac_speedup_pytorch": 21.562619933713943,
+      "jacobian": 33017.654609680176,
+      "jacobian_std": 3415.455643633594,
+      "objective": 15433.875465393066,
+      "objective_std": 1958.2958165140942,
+      "overhead": 2.139297721023777
     }
   }
 }
