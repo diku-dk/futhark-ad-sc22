@@ -1,0 +1,56 @@
+{
+  "data/n10000": {
+    "futhark": {
+      "jac_speedup_jax": 0.5159351007887817,
+      "jac_speedup_pytorch": 0.5395127011432029,
+      "jacobian": 2282.0,
+      "objective": 664.5,
+      "overhead": 3.434161023325809
+    },
+    "jax": {
+      "jac_speedup_futhark": 1.9382282741979777,
+      "jac_speedup_pytorch": 1.0456987716446795,
+      "jacobian": 1177.3638999999998,
+      "jacobian_std": 50.29746143783,
+      "objective": 1132.514,
+      "objective_std": 84.51001471068388,
+      "overhead": 1.0396020711443743
+    },
+    "pytorch": {
+      "jac_speedup_futhark": 1.8535244821503654,
+      "jac_speedup_jax": 0.9562983405127231,
+      "jacobian": 1231.167984008789,
+      "jacobian_std": 31.712088321799424,
+      "objective": 516.5760040283203,
+      "objective_std": 50.40763866965834,
+      "overhead": 2.3833239918385614
+    }
+  },
+  "data/n30000": {
+    "futhark": {
+      "jac_speedup_jax": 0.41176601268593654,
+      "jac_speedup_pytorch": 0.2747536807614227,
+      "jacobian": 19643.8,
+      "objective": 3472.6,
+      "overhead": 5.656798940275298
+    },
+    "jax": {
+      "jac_speedup_futhark": 2.428563721121692,
+      "jac_speedup_pytorch": 0.6672568213418423,
+      "jacobian": 8088.6492,
+      "jacobian_std": 208.1507046026026,
+      "objective": 4467.5151,
+      "objective_std": 18.355994636357785,
+      "overhead": 1.8105477024576817
+    },
+    "pytorch": {
+      "jac_speedup_futhark": 3.639623670295182,
+      "jac_speedup_jax": 1.4986733263948007,
+      "jacobian": 5397.206354141235,
+      "jacobian_std": 5.446649789293448,
+      "objective": 2704.681611061096,
+      "objective_std": 18.481563424693682,
+      "overhead": 1.995505249885517
+    }
+  }
+}

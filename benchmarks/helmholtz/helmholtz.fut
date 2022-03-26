@@ -1,10 +1,12 @@
 -- ==
 -- entry: calculate_objective
 -- input @ data/n10000.in.gz
+-- input @ data/n30000.in.gz
 
 -- ==
 -- entry: calculate_jacobian
 -- input @ data/n10000.in.gz
+-- input @ data/n30000.in.gz
 
 import "lib/github.com/diku-dk/linalg/linalg"
 module la = mk_linalg f32
