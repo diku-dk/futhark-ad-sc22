@@ -23,4 +23,4 @@ $(RESULTS): convert gmm.json gmm_pytorch.json
 	make gen_results
 
 convert:
-	sed -E -r -i 's/f64|f32/$(PRECISION)/g' $(NAME).fut
+	sed -r -i 's/f64|f32/$(PRECISION)/g' $(NAME).fut
