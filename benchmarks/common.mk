@@ -28,7 +28,9 @@ gen_results:
 latex: $(RESULTS)
 	@$(PYTHON_CMD) -c 'import benchmark; benchmark.latex("$(NAME)", $(JAC_SPEEDUP), $(OBJ_SPEEDUP))'
 
-.PHONY: clean
+.PHONY: clean results
+
+results: $(RESULTS)
 
 clean:
 	rm -rf *.json *.c *.actual *.expected __pycache__

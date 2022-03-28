@@ -15,12 +15,10 @@ else
         FUTHARK_BENCH_OPTIONS=
 endif
 
-.PHONY: convert results
-
-results: $(RESULTS)
-
 $(RESULTS): convert gmm.json gmm_pytorch.json
 	make gen_results
+
+.PHONY: convert
 
 convert:
 	sed -r -i 's/f64|f32/$(PRECISION)/g' $(NAME).fut
