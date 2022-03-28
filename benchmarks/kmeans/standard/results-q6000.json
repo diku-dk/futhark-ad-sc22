@@ -1,82 +1,82 @@
 {
   "data/kdd_cup": {
     "futhark": {
-      "obj_speedup_jax": 2.961655958544836,
-      "obj_speedup_jax-vmap": 3.7559178023231032,
-      "obj_speedup_manual": 0.25482592246066654,
-      "obj_speedup_pytorch": 1.5945064632085868,
-      "objective": 70862.1
+      "obj_speedup_jax": 2.94812093916834,
+      "obj_speedup_jax-vmap": 3.579146702352015,
+      "obj_speedup_manual": 0.25116951387183206,
+      "obj_speedup_pytorch": 1.586595721426914,
+      "objective": 70841.4
     },
     "jax": {
-      "obj_speedup_futhark": 0.3376489416722578,
-      "obj_speedup_jax-vmap": 1.268181670962388,
-      "obj_speedup_manual": 0.08604170302950089,
-      "obj_speedup_pytorch": 0.5383834197919541,
-      "objective": 209869.16070000004,
-      "objective_std": 9158.46093223339
+      "obj_speedup_futhark": 0.3391991104279794,
+      "obj_speedup_jax-vmap": 1.2140433775290396,
+      "obj_speedup_manual": 0.08519647567195346,
+      "obj_speedup_pytorch": 0.5381718573168475,
+      "objective": 208849.0147,
+      "objective_std": 9643.121469910408
     },
     "jax-vmap": {
-      "obj_speedup_futhark": 0.2662465082120492,
-      "obj_speedup_jax": 0.7885305574879722,
-      "obj_speedup_manual": 0.06784651205706688,
-      "obj_speedup_pytorch": 0.42453177815083054,
-      "objective": 266152.2229,
-      "objective_std": 12571.953446230054
+      "obj_speedup_futhark": 0.2793962033863703,
+      "obj_speedup_jax": 0.8236937975274943,
+      "obj_speedup_manual": 0.07017580858219014,
+      "obj_speedup_pytorch": 0.4432888208757389,
+      "objective": 253551.76320000002,
+      "objective_std": 15861.724827987455
     },
     "manual": {
-      "obj_speedup_futhark": 3.924247542572339,
-      "obj_speedup_jax": 11.622271117264297,
-      "obj_speedup_jax-vmap": 14.739151205870137,
-      "obj_speedup_pytorch": 6.257238069862008,
-      "objective": 18057.5
+      "obj_speedup_futhark": 3.9813749072679445,
+      "obj_speedup_jax": 11.737574730796034,
+      "obj_speedup_jax-vmap": 14.249924870175123,
+      "obj_speedup_pytorch": 6.316832393267798,
+      "objective": 17793.2
     },
     "pytorch": {
-      "obj_speedup_futhark": 0.627153306100575,
-      "obj_speedup_jax": 1.8574123259338613,
-      "obj_speedup_jax-vmap": 2.35553626716894,
-      "obj_speedup_manual": 0.1598149197513358,
-      "objective": 112990.0764465332,
-      "objective_std": 967.521927023935
+      "obj_speedup_futhark": 0.6302802828061608,
+      "obj_speedup_jax": 1.8581424992857853,
+      "obj_speedup_jax-vmap": 2.2558655957631655,
+      "obj_speedup_manual": 0.15830719223542422,
+      "objective": 112396.66213989258,
+      "objective_std": 4091.787529985416
     }
   },
   "data/random": {
     "futhark": {
-      "obj_speedup_jax": 10.390431136014538,
-      "obj_speedup_jax-vmap": 16.835801410553188,
-      "obj_speedup_manual": 1.0084589922765723,
-      "obj_speedup_pytorch": 1.0229968638839244,
-      "objective": 23111.5
+      "obj_speedup_jax": 15.439109129700572,
+      "obj_speedup_jax-vmap": 17.59679607067431,
+      "obj_speedup_manual": 1.014878574420945,
+      "obj_speedup_pytorch": 1.0444566183816646,
+      "objective": 23154.1
     },
     "jax": {
-      "obj_speedup_futhark": 0.09624239715461609,
-      "obj_speedup_jax-vmap": 1.6203178857707057,
-      "obj_speedup_manual": 0.09705651084882579,
-      "obj_speedup_pytorch": 0.09845567046184339,
-      "objective": 240138.4492,
-      "objective_std": 4663.130156240545
+      "obj_speedup_futhark": 0.06477057656625257,
+      "obj_speedup_jax-vmap": 1.1397546272163426,
+      "obj_speedup_manual": 0.06573427040998106,
+      "obj_speedup_pytorch": 0.06765005737101884,
+      "objective": 357478.6767,
+      "objective_std": 24624.473430591534
     },
     "jax-vmap": {
-      "obj_speedup_futhark": 0.05939723186406617,
-      "obj_speedup_jax": 0.6171628473534679,
-      "obj_speedup_manual": 0.05989967258965408,
-      "obj_speedup_pytorch": 0.060763181920325995,
-      "objective": 389100.6243,
-      "objective_std": 17259.373476372657
+      "obj_speedup_futhark": 0.05682852696500449,
+      "obj_speedup_jax": 0.877381829492836,
+      "obj_speedup_manual": 0.05767405443268599,
+      "obj_speedup_pytorch": 0.05935493110147983,
+      "objective": 407437.97589999996,
+      "objective_std": 18938.859019266132
     },
     "manual": {
-      "obj_speedup_futhark": 0.9916119620714807,
-      "obj_speedup_jax": 10.30327580555198,
-      "obj_speedup_jax-vmap": 16.69458206976445,
-      "obj_speedup_pytorch": 1.0144159273889097,
-      "objective": 23307.0
+      "obj_speedup_futhark": 0.985339552143532,
+      "obj_speedup_jax": 15.212764875354278,
+      "obj_speedup_jax-vmap": 17.338819159439286,
+      "obj_speedup_pytorch": 1.0291444165895371,
+      "objective": 23498.6
     },
     "pytorch": {
-      "obj_speedup_futhark": 0.9775201032419452,
-      "obj_speedup_jax": 10.156855316805254,
-      "obj_speedup_jax-vmap": 16.45733433300484,
-      "obj_speedup_manual": 0.985788938245463,
-      "objective": 23642.99201965332,
-      "objective_std": 1383.5314422654608
+      "obj_speedup_futhark": 0.9574356487390084,
+      "obj_speedup_jax": 14.781953465547216,
+      "obj_speedup_jax-vmap": 16.84779986165409,
+      "obj_speedup_manual": 0.9716809262920374,
+      "objective": 24183.4529876709,
+      "objective_std": 1656.1460784480091
     }
   }
 }
