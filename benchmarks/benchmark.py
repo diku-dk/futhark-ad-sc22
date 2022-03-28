@@ -162,7 +162,7 @@ def r(n):
 
 def latex(name, jac_speedup, obj_speedup, paths=get_results()):
     d = process(paths, jac_speedup, obj_speedup)
-    if name is "gmm":
+    if name == "gmm":
         d0 = d["data/1k/gmm_d64_K200"]
         d1 = d["data/1k/gmm_d128_K200"]
         d2 = d["data/10k/gmm_d32_K200"]
@@ -178,7 +178,7 @@ def latex(name, jac_speedup, obj_speedup, paths=get_results()):
     \\textbf{{Fut. Overhead ($\\times$)}} & ${r(d0['pytorch']['overhead'])}$         & ${r(d1['pytorch']['overhead'])}$        & ${r(d2['pytorch']['overhead'])}$        & ${r(d3['pytorch']['overhead'])}$        & ${r(d4['pytorch']['overhead'])}$        & ${r(d5['pytorch']['overhead'])}$"""
         )
 
-    elif name is "lstm":
+    elif name == "lstm":
         d0 = d["data/lstm-bs1024-n20-d300-h192"]
         d1 = d["data/lstm-bs1024-n300-d80-h256"]
         print(
@@ -187,7 +187,7 @@ def latex(name, jac_speedup, obj_speedup, paths=get_results()):
            \\multicolumn{{1}}{{|c}}{{$\\mathbf{{D_1}}$}} & \\multicolumn{{1}}{{c|}}{{${ms(d1['pytorch']['jacobian'])}$}}  &  {r(d1['futhark']['jac_speedup_pytorch'])} & {r(d1['jax']['jac_speedup_pytorch'])} & {r(d1['torch.nn.LSTM']['jac_speedup_pytorch'])} & {r(d1['pytorch']['overhead'])} & {r(d1['futhark']['overhead'])}  & {r(d1['jax']['overhead'])} & {r(d1['torch.nn.LSTM']['overhead'])} \\\\\\hline"""
         )
 
-    elif name is "kmeans":
+    elif name == "kmeans":
         d0 = d["data/kdd_cup"]
         d1 = d["data/random"]
         print(
@@ -211,13 +211,13 @@ def latex(name, jac_speedup, obj_speedup, paths=get_results()):
     #                                                                       & scrna     & $156ms$ & $579ms$ & $367799ms$\\
     #  \end{tabular}
 
-    elif name is "rsbench":
+    elif name == "rsbench":
         d0 = d["data/small"]
         print(
             f"\\textbf{{RSBench}} & $2.311s$ & ${s(d0['futhark']['objective'])}s$ & ${r(d0['futhark']['overhead'])}\\times$ & $4.2\\times$ \\\\"
         )
 
-    elif name is "xsbench":
+    elif name == "xsbench":
         d0 = d["data/small"]
         print(
             f"\\textbf{{XSBench}} & $0.244s$ & ${s(d0['futhark']['objective'])}s$ & ${r(d0['futhark']['overhead'])}\\times$ & $3.2\\times$ \\\\"
