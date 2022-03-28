@@ -1,4 +1,10 @@
-RESULTS=results.json
+ifeq ($(GPU), A100)
+	RESULTS=results-a100.json
+else ifeq ($(GPU), 2080TI)
+	RESULTS=results-2080ti.json
+else
+	RESULTS=results.json
+endif
 JAC_SPEEDUP=True
 OBJ_SPEEDUP=False
 RUNS=10
@@ -8,16 +14,11 @@ FUTHARK_BENCH_OPTIONS=--pass-option=--default-tile-size=$(FUTHARK_TILE_SIZE) --p
 PYTHONPATH=../..:..:$PYTHONPATH
 PYTHON_CMD=PYTHONPATH=../../:../ $(PYTHON)
 PRECISION=f32
-CONVERT=false
 
 %.json: %.py
 	$(PYTHON_CMD) -c 'import $(basename  $<); $(basename $<).bench_all(runs=$(RUNS), output="$(basename $<).json", prec="$(PRECISION)")'
 
 %.json: %.fut
-ifeq ($(CONVERT),true)
-	echo "lol"
-	sed -E -r -i 's/f64|f32/$(PRECISION)/' $(NAME).fut
-endif
 	$(FUTHARK) bench $< $(FUTHARK_TUNING) $(FUTHARK_BENCH_OPTIONS) -r $(RUNS) --backend=$(FUTHARK_BACKEND) --json $@
 	$(PYTHON_CMD) -c 'import benchmark; benchmark.process_futhark("$(NAME)", "$(basename $<).json", "$<", "$(patsubst *_%, %, $(basename $<))")'
 
