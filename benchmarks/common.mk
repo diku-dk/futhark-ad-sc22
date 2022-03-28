@@ -2,6 +2,8 @@ ifeq ($(GPU), A100)
 	RESULTS=results-a100.json
 else ifeq ($(GPU), 2080TI)
 	RESULTS=results-2080ti.json
+else ifeq ($(GPU), Q6000)
+	RESULTS=results-q6000.json
 else
 	RESULTS=results.json
 endif
@@ -26,7 +28,7 @@ gen_results:
 	$(PYTHON_CMD) -c 'import benchmark; benchmark.dump("$(RESULTS)", jac_speedup=$(JAC_SPEEDUP), obj_speedup=$(OBJ_SPEEDUP))'
 
 latex: $(RESULTS)
-	@$(PYTHON_CMD) -c 'import benchmark; benchmark.latex("$(NAME)", $(JAC_SPEEDUP), $(OBJ_SPEEDUP))'
+	@$(PYTHON_CMD) -c 'import benchmark; benchmark.latex("$(NAME)", $(JAC_SPEEDUP), $(OBJ_SPEEDUP), "$(RESULTS)")'
 
 .PHONY: clean results
 
