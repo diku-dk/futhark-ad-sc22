@@ -9,7 +9,7 @@ import jax
 import jax.numpy as jnp
 import numpy as np
 from benchmark import Benchmark
-from jax import grad
+from jax import grad, jvp
 
 data_dir = Path(__file__).parent / "data"
 
@@ -137,9 +137,7 @@ def kmeans(cost_fn, max_iter, clusters, features, _tolerance=1):
     def body(v):
         t, rmse, clusters = v
         f_vjp = grad(partial(cost_fn, features))
-        hes = grad(lambda x: jnp.vdot(f_vjp(x), jnp.ones(shape=clusters.shape)))(
-            clusters
-        )
+        _, hes = jvp(f_vjp, [clusters], [jnp.ones(shape=clusters.shape)])
         new_cluster = clusters - f_vjp(clusters) / hes
         rmse = ((new_cluster - clusters) ** 2).sum()
         return t + 1, rmse, new_cluster
