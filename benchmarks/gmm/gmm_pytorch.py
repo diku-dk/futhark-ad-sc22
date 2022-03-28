@@ -30,7 +30,7 @@ def bench_all(paths=datasets, runs=10, output="gmm_pytorch.json", prec="f64"):
     times = {}
     for path in paths:
         g = futhark_data.load(gzip.open(data_folder + path + ".in.gz"))
-        gmm = PyTorchGMM(runs, list(g), path)
+        gmm = PyTorchGMM(runs, list(g), data_folder + path)
         gmm.benchmark()
         times[path] = {"pytorch": gmm.report()}
     with open(output, "w") as f:
@@ -67,7 +67,7 @@ class PyTorchGMM(torch.nn.Module, Benchmark):
     def validate(self):
         obj_out = self.data + ".F"
         if path.exists(obj_out):
-            obj = torch.tensor(tuple(futhark_data.load(open(obj_out)))[0])
+            obj = torch.tensor(tuple(futhark_data.load(open(obj_out, "rb")))[0])
             assert(torch.allclose(self.objective, obj, 1e-03, 1e-05))
         return
 
@@ -122,7 +122,7 @@ def gmm_jacobian(inputs, params):
     torch_jacobian(gmm_objective, inputs=inputs, params=params)
 
 
-def to_torch_tensor(param, grad_req=False, dtype=torch.float64):
+def to_torch_tensor(param, grad_req=False):
     """Converts given single parameter to torch tensors. Note that parameter
     can be an ndarray-like object.
 
@@ -130,17 +130,15 @@ def to_torch_tensor(param, grad_req=False, dtype=torch.float64):
         param (ndarray-like): parameter to convert.
         grad_req (bool, optional): defines flag for calculating tensor
             jacobian for created torch tensor. Defaults to False.
-        dtype (type, optional): defines a type of tensor elements. Defaults to
-            torch.float64.
 
     Returns:
         torch tensor
     """
 
-    return torch.tensor(param, dtype=dtype, requires_grad=grad_req, device=device)
+    return torch.tensor(param, requires_grad=grad_req, device=device)
 
 
-def to_torch_tensors(params, grad_req=False, dtype=torch.float64):
+def to_torch_tensors(params, grad_req=False):
     """Converts given multiple parameters to torch tensors. Note that
     parameters can be ndarray-lake objects.
 
@@ -148,15 +146,13 @@ def to_torch_tensors(params, grad_req=False, dtype=torch.float64):
         params (enumerable of ndarray-like): parameters to convert.
         grad_req (bool, optional): defines flag for calculating tensor
             jacobian for created torch tensors. Defaults to False.
-        dtype (type, optional): defines a type of tensor elements. Defaults to
-            torch.float64.
 
     Returns:
         tuple of torch tensors
     """
 
     return tuple(
-        torch.tensor(param, dtype=dtype, requires_grad=grad_req, device=device)
+        torch.tensor(param, requires_grad=grad_req, device=device)
         for param in params
     )
 
