@@ -15,20 +15,21 @@ device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 print("Using device:", device)
 
 datasets = [
-    "data/1k/gmm_d64_K200",
-    "data/1k/gmm_d128_K200",
-    "data/10k/gmm_d32_K200",
-    "data/10k/gmm_d64_K25",
-    "data/10k/gmm_d128_K25",
-    "data/10k/gmm_d128_K200",
+    "1k/gmm_d64_K200",
+    "1k/gmm_d128_K200",
+    "10k/gmm_d32_K200",
+    "10k/gmm_d64_K25",
+    "10k/gmm_d128_K25",
+    "10k/gmm_d128_K200",
 ]
 
 
 def bench_all(paths=datasets, runs=10, output="gmm_pytorch.json", prec="f64"):
     set_precision(prec)
+    data_folder =  "data/" + prec + "/"
     times = {}
     for path in paths:
-        g = futhark_data.load(gzip.open(path + ".in.gz"))
+        g = futhark_data.load(gzip.open(data_folder + path + ".in.gz"))
         gmm = PyTorchGMM(runs, list(g), path)
         gmm.benchmark()
         times[path] = {"pytorch": gmm.report()}
