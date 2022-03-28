@@ -6,8 +6,7 @@ ifeq ($(GPU), A100)
 	FUTHARK_TILE_SIZE=16
 	FUTHARK_REG_TILE=3
         PRECISION=f64
-else  
-ifeq ($(GPU), 2080TI)
+else ifeq ($(GPU), 2080TI)
 	FUTHARK_TUNING=--tuning=.tuning.2080ti
 	FUTHARK_TILE_SIZE=8
 	FUTHARK_REG_TILE=4
@@ -15,11 +14,13 @@ ifeq ($(GPU), 2080TI)
 else
         FUTHARK_BENCH_OPTIONS=
 endif
-endif
 
-.PHONY: convert
-convert:
-	sed -E -r -i 's/f64|f32/$(PRECISION)/g' $(NAME).fut
+.PHONY: convert results
+
+results: $(RESULTS)
 
 $(RESULTS): convert gmm.json gmm_pytorch.json
 	make gen_results
+
+convert:
+	sed -E -r -i 's/f64|f32/$(PRECISION)/g' $(NAME).fut
