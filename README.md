@@ -8,8 +8,7 @@ export PYTHON=python
 ```
 2. Execute [`setup-python.sh`](setup-python.sh) to set-up a Python virtual environment with the appropriate packages:
 ```
-$ chmod +x setup-python.sh
-$ ./setup-python.sh
+$ sh setup-python.sh
 ```
 3. Launch the Python virtual environment:
 ```
