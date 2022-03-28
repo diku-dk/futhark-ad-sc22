@@ -1,4 +1,4 @@
-include ../../common.mk
+include ../common.mk
 NAME=gmm
 ifeq ($(GPU), A100)
 	FUTHARK_TUNING=--tuning=.tuning.a100
