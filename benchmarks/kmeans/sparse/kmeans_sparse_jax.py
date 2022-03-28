@@ -42,8 +42,9 @@ class KMeansSparse(Benchmark):
         timings = np.zeros(runs + 1)
         for i in range(runs + 1):
             start = time_ns()
+            kmeans_fn = jax.jit(kmeans)
             self.objective = jax.block_until_ready(
-                kmeans(self.max_iter, self.clusters, self.features)
+                kmeans_fn(self.max_iter, self.clusters, self.features)
             )
             timings[i] = (time_ns() - start) / 1000
         return timings
@@ -99,7 +100,6 @@ def cost(points, centers):
     return min_dist.sum()
 
 
-@jax.jit
 def kmeans(max_iter, clusters, features):
     cost_sp = sparsify(cost)
 
