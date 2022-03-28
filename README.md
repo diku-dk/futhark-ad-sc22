@@ -15,3 +15,12 @@ $ ./setup-python.sh
 ```
 $ source .venv/bin/activate
 ```
+4. If benchmarking on the A100 or 2080Ti, set the `GPU` env variable appropriately (so the correct
+tuning files and options are used):
+```
+$ export GPU=A100
+```
+or
+```
+$ export GPU=2080TI
+```
