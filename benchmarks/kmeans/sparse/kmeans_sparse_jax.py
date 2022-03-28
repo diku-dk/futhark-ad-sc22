@@ -110,8 +110,8 @@ def kmeans(max_iter, clusters, features):
     def body(v):
         t, rmse, clusters = v
         f_vjp = grad(partial(cost_sp, features))
-        _, hes = jvp(f_vjp, [clusters], [jnp.ones(shape=clusters.shape)])
-        new_cluster = clusters - f_vjp(clusters) / hes
+        d, hes = jvp(f_vjp, [clusters], [jnp.ones(shape=clusters.shape)])
+        new_cluster = clusters - d / hes
         rmse = ((new_cluster - clusters) ** 2).sum()
         return t + 1, rmse, new_cluster
 
