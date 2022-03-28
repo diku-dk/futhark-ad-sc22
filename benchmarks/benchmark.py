@@ -132,7 +132,7 @@ def process(paths, jac_speedup, obj_speedup):
 def get_results(d="./"):
     res = []
     for file in os.listdir(d):
-        if file.endswith(".json"):
+        if file.endswith(".json") and "result" not in file:
             res.append(os.path.join(d, file))
     return res
 
