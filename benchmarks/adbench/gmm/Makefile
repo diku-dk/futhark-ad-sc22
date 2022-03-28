@@ -17,6 +17,7 @@ endif
 
 
 $(RESULTS): data gmm.json gmm_pytorch.json
+	sed -E -r -i 's/f64|f32/$(PRECISION)/' $(NAME).fut
 	make gen_results
 
 data:
