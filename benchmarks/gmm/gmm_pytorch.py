@@ -32,7 +32,7 @@ def bench_all(paths=datasets, runs=10, output="gmm_pytorch.json", prec="f64"):
         g = futhark_data.load(gzip.open(data_folder + path + ".in.gz"))
         gmm = PyTorchGMM(runs, list(g), data_folder + path)
         gmm.benchmark()
-        times[path] = {"pytorch": gmm.report()}
+        times[data_folder + path] = {"pytorch": gmm.report()}
     with open(output, "w") as f:
         json.dump(times, f, indent=2)
     print("Benchmarks output to: " + output)

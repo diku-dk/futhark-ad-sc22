@@ -1,0 +1,82 @@
+{
+  "data/kdd_cup": {
+    "futhark": {
+      "obj_speedup_jax": 2.961655958544836,
+      "obj_speedup_jax-vmap": 3.7559178023231032,
+      "obj_speedup_manual": 0.25482592246066654,
+      "obj_speedup_pytorch": 1.5945064632085868,
+      "objective": 70862.1
+    },
+    "jax": {
+      "obj_speedup_futhark": 0.3376489416722578,
+      "obj_speedup_jax-vmap": 1.268181670962388,
+      "obj_speedup_manual": 0.08604170302950089,
+      "obj_speedup_pytorch": 0.5383834197919541,
+      "objective": 209869.16070000004,
+      "objective_std": 9158.46093223339
+    },
+    "jax-vmap": {
+      "obj_speedup_futhark": 0.2662465082120492,
+      "obj_speedup_jax": 0.7885305574879722,
+      "obj_speedup_manual": 0.06784651205706688,
+      "obj_speedup_pytorch": 0.42453177815083054,
+      "objective": 266152.2229,
+      "objective_std": 12571.953446230054
+    },
+    "manual": {
+      "obj_speedup_futhark": 3.924247542572339,
+      "obj_speedup_jax": 11.622271117264297,
+      "obj_speedup_jax-vmap": 14.739151205870137,
+      "obj_speedup_pytorch": 6.257238069862008,
+      "objective": 18057.5
+    },
+    "pytorch": {
+      "obj_speedup_futhark": 0.627153306100575,
+      "obj_speedup_jax": 1.8574123259338613,
+      "obj_speedup_jax-vmap": 2.35553626716894,
+      "obj_speedup_manual": 0.1598149197513358,
+      "objective": 112990.0764465332,
+      "objective_std": 967.521927023935
+    }
+  },
+  "data/random": {
+    "futhark": {
+      "obj_speedup_jax": 10.390431136014538,
+      "obj_speedup_jax-vmap": 16.835801410553188,
+      "obj_speedup_manual": 1.0084589922765723,
+      "obj_speedup_pytorch": 1.0229968638839244,
+      "objective": 23111.5
+    },
+    "jax": {
+      "obj_speedup_futhark": 0.09624239715461609,
+      "obj_speedup_jax-vmap": 1.6203178857707057,
+      "obj_speedup_manual": 0.09705651084882579,
+      "obj_speedup_pytorch": 0.09845567046184339,
+      "objective": 240138.4492,
+      "objective_std": 4663.130156240545
+    },
+    "jax-vmap": {
+      "obj_speedup_futhark": 0.05939723186406617,
+      "obj_speedup_jax": 0.6171628473534679,
+      "obj_speedup_manual": 0.05989967258965408,
+      "obj_speedup_pytorch": 0.060763181920325995,
+      "objective": 389100.6243,
+      "objective_std": 17259.373476372657
+    },
+    "manual": {
+      "obj_speedup_futhark": 0.9916119620714807,
+      "obj_speedup_jax": 10.30327580555198,
+      "obj_speedup_jax-vmap": 16.69458206976445,
+      "obj_speedup_pytorch": 1.0144159273889097,
+      "objective": 23307.0
+    },
+    "pytorch": {
+      "obj_speedup_futhark": 0.9775201032419452,
+      "obj_speedup_jax": 10.156855316805254,
+      "obj_speedup_jax-vmap": 16.45733433300484,
+      "obj_speedup_manual": 0.985788938245463,
+      "objective": 23642.99201965332,
+      "objective_std": 1383.5314422654608
+    }
+  }
+}
