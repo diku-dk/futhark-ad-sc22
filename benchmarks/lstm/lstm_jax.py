@@ -54,8 +54,8 @@ def bench_all(
     for params in parameters:
         filename = gen_filename(*params, directory="data")
         tensors = read_tensors(filename)
-        lstm = LSTM(tensors, 1, filename, _lstm_cell, "jax")
-        lstm_vmap = LSTM(tensors, 1, filename, _lstm_vmap_cell, "jax-vmap")
+        lstm = LSTM(tensors, 1, filename, _lstm_cell, jnp.matmul, "jax")
+        lstm_vmap = LSTM(tensors, 1, filename, _lstm_vmap_cell, _vmap_mul, "jax-vmap")
         lstm.benchmark()
         lstm_vmap.benchmark()
         times[filename] = {lstm.kind: lstm.report(), lstm_vmap.kind: lstm_vmap.report()}
@@ -65,11 +65,11 @@ def bench_all(
 
 
 class LSTM(Benchmark):
-    def __init__(self, tensors, runs, filename, cell, kind, hid_dim=5):
+    def __init__(self, tensors, runs, filename, cell, mm, kind, hid_dim=5):
         self.runs = runs
         self.kind = kind
         self.tensors = tensors
-        _, self.run = rnn(hid_dim=hid_dim, num_layers=1, lstm_cell=cell)
+        _, self.run = rnn(hid_dim=hid_dim, num_layers=1, lstm_cell=cell, matmul=mm)
         self.hid_dim = hid_dim
         self.filename = filename
 
@@ -99,11 +99,13 @@ class LSTM(Benchmark):
         self.init_state = jnp.swapaxes(jnp.array([h_0, c_0]), 0, 1)
 
     def calculate_objective(self, runs):
+        run = lambda xs, init, ws, t: self.run(xs, init, ws, t)
+
         timings = np.zeros(runs + 1)
         for i in range(runs + 1):
             start = time_ns()
             self.loss = block_until_ready(
-                self.run(self.xs, self.init_state, self.weights, self.target)
+                jit(self.run)(self.xs, self.init_state, self.weights, self.target)
             )
             timings[i] = (time_ns() - start) / 1000
         return timings
@@ -169,7 +171,6 @@ def _lstm_vmap_cell(state, weights: LSTM_WEIGHTS, input):
     h = o * tanh(c)
     return jnp.stack((h, c)), h
 
-@jit
 def _init_lstm_weights(rng_key, in_dim, hid_dim):
     in_key, hid_key = split(rng_key)
     in_weights = normal(in_key, (4, in_dim, hid_dim))
@@ -177,8 +178,7 @@ def _init_lstm_weights(rng_key, in_dim, hid_dim):
     bias = jnp.zeros((4, hid_dim))
     return LSTM_WEIGHTS(*in_weights, *hid_weights, *bias)
 
-@jit
-def rnn(hid_dim=5, num_layers=2, lstm_cell=_lstm_vmap_cell):
+def rnn(hid_dim=5, num_layers=2, lstm_cell=_lstm_vmap_cell, matmul=_vmap_mul):
     def init(rng_seed, in_dim):
         weight_key, state_key = split(rng_seed)
         keys = split(weight_key, num_layers)
@@ -202,11 +202,10 @@ def rnn(hid_dim=5, num_layers=2, lstm_cell=_lstm_vmap_cell):
     def run_vmap(xs, init_state, weights, target):
         new_state, y_hat = scan(_cell, (init_state, weights), xs)
         batch_size, steps, _ = y_hat.shape
-        jnp.reshape(y_hat, (batch_size * steps, -1))
-        y_hat = jnp.matmul(y_hat, weights[-1].w_out) + weights[-1].b_out
-        jnp.reshape(y_hat, (batch_size, steps, -1))
+        y_hat = jnp.reshape(y_hat, (batch_size * steps, -1))
+        y_hat = _vmap_mul(y_hat, weights[-1].w_out) + weights[-1].b_out
+        y_hat = jnp.reshape(y_hat, (batch_size, steps, -1))
         loss = jnp.mean((y_hat - target) ** 2)
-        # return new_state, y_hat, loss
         return loss
 
     return init, run_vmap
