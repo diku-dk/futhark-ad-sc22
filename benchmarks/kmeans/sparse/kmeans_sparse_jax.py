@@ -1,6 +1,5 @@
 import gzip
 import json
-from functools import partial
 from pathlib import Path
 from time import time_ns
 
@@ -53,13 +52,11 @@ class KMeansSparse(Benchmark):
         return np.zeros(runs + 1)
 
     def validate(self):
-        return
-        #data_file = data_dir / f"{self.name}.out"
-        #if data_file.exists():
-        #    out = tuple(futhark_data.load(open(data_file)))[0]
-        #    assert np.allclose(
-        #        out, self.objective, rtol=1e-02, atol=1e-02
-        #    )
+        data_file = data_dir / f"{self.name}.out"
+        if data_file.exists():
+            out = tuple(futhark_data.load(open(data_file, "rb")))[0]
+            assert np.allclose(out, self.objective, rtol=1e-02, atol=1e-05)
+            print(f"{self.kind}: validates on {self.name}")
 
 
 def get_clusters(k, values, indices, pointers, num_col):
@@ -109,8 +106,8 @@ def kmeans(max_iter, clusters, features):
 
     def body(v):
         t, rmse, clusters = v
-        f_vjp = grad(partial(cost_sp, features))
-        d, hes = jvp(f_vjp, [clusters], [jnp.ones(shape=clusters.shape)])
+        f_diff = grad(lambda cs: cost_sp(features, cs))
+        d, hes = jvp(f_diff, [clusters], [jnp.ones(shape=clusters.shape)])
         new_cluster = clusters - d / hes
         rmse = ((new_cluster - clusters) ** 2).sum()
         return t + 1, rmse, new_cluster

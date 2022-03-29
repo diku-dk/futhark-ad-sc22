@@ -51,13 +51,13 @@ class KMeansSparse(Benchmark):
         return
 
     def validate(self):
-        return
-        #data_file = data_dir / f"{self.name}.out"
-        #if data_file.exists():
-        #    out = tuple(futhark_data.load(open(data_file)))[0]
-        #    assert np.allclose(
-        #        out, self.objective.cpu().detach().numpy(), rtol=1e-02, atol=1e-02
-        #    )
+        data_file = data_dir / f"{self.name}.out"
+        if data_file.exists():
+            out = tuple(futhark_data.load(open(data_file, "rb")))[0]
+            assert np.allclose(
+                out, self.objective.cpu().detach().numpy(), rtol=1e-02, atol=1e-02
+            )
+        print(f"{self.kind}: validates on {self.name}")
 
 
 def bench_all(runs, output, datasets=["movielens", "nytimes", "scrna"], prec="f32"):
@@ -125,6 +125,7 @@ def get_clusters(k, values, indices, pointers, num_col):
         size=(k, num_col),
     ).to_dense()
     return sp_clusters
+
 
 def bench_gpu(dataset, k=10, max_iter=10, times=2):
     start = torch.cuda.Event(enable_timing=True)
