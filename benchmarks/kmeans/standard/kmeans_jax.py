@@ -8,7 +8,7 @@ import jax
 import jax.numpy as jnp
 import numpy as np
 from benchmark import Benchmark
-from jax import grad, jvp, jit
+from jax import grad, jvp, jit, vmap
 
 data_dir = Path(__file__).parent / "data"
 
@@ -81,12 +81,13 @@ def cost(points, centers):
     return min_dist.sum()
 
 
+def euclid_dist(xs,ys):
+  return (vmap(lambda x, y: (x - y) * (x - y))(xs, ys)).sum()
+
 def cost_vmap(features, clusters):
-    dists = jax.vmap(
-        lambda feature: jax.vmap(
-            lambda cluster: (
-                jax.vmap(lambda x, y: (x - y) * (x - y))(feature, cluster)
-            ).sum()
+    dists = vmap(
+        lambda feature: vmap(
+            lambda cluster: euclid_dist(feature, cluster)
         )(clusters)
     )(features)
     min_dist = jnp.min(dists, axis=1)
@@ -121,10 +122,11 @@ def kmeans_vmap(max_iter, clusters, features, _tolerance=1):
 
     def body(v):
         t, rmse, clusters = v
-        f_diff = grad(lambda cs: cost(features,cs))
+        f_diff = grad(lambda cs: cost_vmap(features,cs))
         d, hes = jvp(f_diff, [clusters], [jnp.ones(shape=clusters.shape)])
-        new_cluster = clusters - d / hes
-        rmse = ((new_cluster - clusters) ** 2).sum()
+        x = vmap(lambda ds, hs: vmap(lambda _d, _h: _d/_h)(ds, hs))(d, hes)
+        new_cluster = vmap(lambda cs, xs: vmap(lambda c, _x: c - _x)(cs, xs))(clusters, x)
+        rmse = (vmap(lambda new, old: euclid_dist(new, old))(new_cluster, clusters)).sum()
         return t + 1, rmse, new_cluster
 
     return jax.lax.while_loop(cond, body, (0, float("inf"), clusters))
