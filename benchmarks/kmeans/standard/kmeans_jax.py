@@ -8,7 +8,7 @@ import jax
 import jax.numpy as jnp
 import numpy as np
 from benchmark import Benchmark
-from jax import grad, jvp, jit, vmap
+from jax import grad, jit, jvp, vmap
 
 data_dir = Path(__file__).parent / "data"
 
@@ -33,7 +33,8 @@ class KMeans(Benchmark):
         for i in range(runs + 1):
             start = time_ns()
             _t, _rmse, self.objective = jax.block_until_ready(
-                self.kmeans_fn(self.max_iter, self.clusters, self.features))
+                self.kmeans_fn(self.max_iter, self.clusters, self.features)
+            )
             timings[i] = (time_ns() - start) / 1000
         return timings
 
@@ -81,14 +82,13 @@ def cost(points, centers):
     return min_dist.sum()
 
 
-def euclid_dist(xs,ys):
-  return (vmap(lambda x, y: (x - y) * (x - y))(xs, ys)).sum()
+def euclid_dist(xs, ys):
+    return (vmap(lambda x, y: (x - y) * (x - y))(xs, ys)).sum()
+
 
 def cost_vmap(features, clusters):
     dists = vmap(
-        lambda feature: vmap(
-            lambda cluster: euclid_dist(feature, cluster)
-        )(clusters)
+        lambda feature: vmap(lambda cluster: euclid_dist(feature, cluster))(clusters)
     )(features)
     min_dist = jnp.min(dists, axis=1)
     return min_dist.sum()
@@ -104,13 +104,14 @@ def kmeans(max_iter, clusters, features, _tolerance=1):
 
     def body(v):
         t, rmse, clusters = v
-        f_diff = grad(lambda cs: cost(features,cs))
+        f_diff = grad(lambda cs: cost(features, cs))
         d, hes = jvp(f_diff, [clusters], [jnp.ones(shape=clusters.shape)])
         new_cluster = clusters - d / hes
         rmse = ((new_cluster - clusters) ** 2).sum()
         return t + 1, rmse, new_cluster
 
     return jax.lax.while_loop(cond, body, (0, float("inf"), clusters))
+
 
 @jit
 def kmeans_vmap(max_iter, clusters, features, _tolerance=1):
@@ -122,11 +123,15 @@ def kmeans_vmap(max_iter, clusters, features, _tolerance=1):
 
     def body(v):
         t, rmse, clusters = v
-        f_diff = grad(lambda cs: cost_vmap(features,cs))
+        f_diff = grad(lambda cs: cost_vmap(features, cs))
         d, hes = jvp(f_diff, [clusters], [jnp.ones(shape=clusters.shape)])
-        x = vmap(lambda ds, hs: vmap(lambda _d, _h: _d/_h)(ds, hs))(d, hes)
-        new_cluster = vmap(lambda cs, xs: vmap(lambda c, _x: c - _x)(cs, xs))(clusters, x)
-        rmse = (vmap(lambda new, old: euclid_dist(new, old))(new_cluster, clusters)).sum()
+        x = vmap(lambda ds, hs: vmap(lambda _d, _h: _d / _h)(ds, hs))(d, hes)
+        new_cluster = vmap(lambda cs, xs: vmap(lambda c, _x: c - _x)(cs, xs))(
+            clusters, x
+        )
+        rmse = (
+            vmap(lambda new, old: euclid_dist(new, old))(new_cluster, clusters)
+        ).sum()
         return t + 1, rmse, new_cluster
 
     return jax.lax.while_loop(cond, body, (0, float("inf"), clusters))
