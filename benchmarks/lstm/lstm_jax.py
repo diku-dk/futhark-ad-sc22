@@ -203,7 +203,7 @@ def rnn(hid_dim=5, num_layers=2, lstm_cell=_lstm_vmap_cell, matmul=_vmap_mul):
         new_state, y_hat = scan(_cell, (init_state, weights), xs)
         batch_size, steps, _ = y_hat.shape
         y_hat = jnp.reshape(y_hat, (batch_size * steps, -1))
-        y_hat = _vmap_mul(y_hat, weights[-1].w_out) + weights[-1].b_out
+        y_hat = matmul(y_hat, weights[-1].w_out) + weights[-1].b_out
         y_hat = jnp.reshape(y_hat, (batch_size, steps, -1))
         loss = jnp.mean((y_hat - target) ** 2)
         return loss
