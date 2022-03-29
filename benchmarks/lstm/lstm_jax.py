@@ -2,16 +2,15 @@ import json
 from collections import namedtuple
 from time import time_ns
 
-import jax.random
+import futhark_data
 import numpy as np
 from benchmark import Benchmark
-from jax import block_until_ready, jit, vmap
+from jax import block_until_ready, grad, jit
 from jax import numpy as jnp
-from jax import grad
+from jax import vmap
 from jax.lax import scan
 from jax.nn import sigmoid, tanh
-from jax.random import PRNGKey, normal, split
-import futhark_data
+from jax.random import normal, split
 
 from lstm_pytorch import gen_filename, parameters
 
@@ -59,8 +58,7 @@ def bench_all(
         lstm_vmap = LSTM(tensors, 1, filename, _lstm_vmap_cell, "jax-vmap")
         lstm.benchmark()
         lstm_vmap.benchmark()
-        times[filename] = {lstm.kind: lstm.report(),
-                           lstm_vmap.kind: lstm_vmap.report()}
+        times[filename] = {lstm.kind: lstm.report(), lstm_vmap.kind: lstm_vmap.report()}
     with open(output, "w") as f:
         json.dump(times, f, indent=2)
     return
@@ -129,9 +127,9 @@ class LSTM(Benchmark):
     def validate(self):
         loss = tuple(futhark_data.load(open(f"{self.filename}.F", "rb")))[0]
         assert np.allclose(loss, self.loss, rtol=1e-02, atol=1e-05)
+        print(f"{self.kind}: validates on {self.filename}")
         # jac = tuple(futhark_data.load(open(f"{self.filename}.J", "rb")))[0]
         # assert np.allclose(jac, self.jacobian, rtol=1e-02, atol=1e-05)
-
 
 
 def _lstm_cell(state, weights: LSTM_WEIGHTS, input):

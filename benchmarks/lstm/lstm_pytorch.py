@@ -1,18 +1,19 @@
 import json
 import os
+import random
 from itertools import chain
 
 import futhark_data
+import numpy as np
 import torch
 import torch.nn as nn
 from benchmark import Benchmark, set_precision
-import random
-import numpy as np
 
 device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 print("Using device:", device)
 
 parameters = [(1024, 20, 300, 192), (1024, 300, 80, 256)]
+
 
 def equal(m1, m2):
     jacobians_equal = True
@@ -63,6 +64,7 @@ def bench_all(runs, output, parameters=parameters, data_dir="data", prec="f32"):
         torchLSTM.benchmark()
         naiveLSTM.benchmark()
         assert equal(torchLSTM, naiveLSTM)
+        print(f"pytorch and torch.nn.LSTM: validates on filename")
         times[filename] = {
             "pytorch": naiveLSTM.report(),
             "torch.nn.LSTM": torchLSTM.report(),
