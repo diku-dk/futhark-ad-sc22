@@ -1,0 +1,112 @@
+{
+  "data/lstm-bs1024-n20-d300-h192": {
+    "futhark": {
+      "jac_speedup_jax": 0.6721214248346103,
+      "jac_speedup_jax-vmap": 10.012559086664856,
+      "jac_speedup_pytorch": 3.005212705767378,
+      "jac_speedup_torch.nn.LSTM": 0.25899726319344785,
+      "jacobian": 15100.7,
+      "objective": 7081.6,
+      "overhead": 2.1323853366470855
+    },
+    "jax": {
+      "jac_speedup_futhark": 1.4878264001866495,
+      "jac_speedup_jax-vmap": 14.896949742568701,
+      "jac_speedup_pytorch": 4.471234801817058,
+      "jac_speedup_torch.nn.LSTM": 0.3853429657553017,
+      "jacobian": 10149.504,
+      "jacobian_std": 0.0,
+      "objective": 2932.019,
+      "objective_std": 0.0,
+      "overhead": 3.4616092187670002
+    },
+    "jax-vmap": {
+      "jac_speedup_futhark": 0.09987456666616246,
+      "jac_speedup_jax": 0.0671278360524004,
+      "jac_speedup_pytorch": 0.30014431672816244,
+      "jac_speedup_torch.nn.LSTM": 0.025867239429167632,
+      "jacobian": 151196.651,
+      "jacobian_std": 0.0,
+      "objective": 111403.003,
+      "objective_std": 0.0,
+      "overhead": 1.3572044462751154
+    },
+    "pytorch": {
+      "jac_speedup_futhark": 0.33275514843953485,
+      "jac_speedup_jax": 0.22365186449023242,
+      "jac_speedup_jax-vmap": 3.331730585142778,
+      "jac_speedup_torch.nn.LSTM": 0.08618267275936901,
+      "jacobian": 45380.815505981445,
+      "jacobian_std": 429.82809868732653,
+      "objective": 11188.451385498047,
+      "objective_std": 3661.371418030319,
+      "overhead": 4.056040817659713
+    },
+    "torch.nn.LSTM": {
+      "jac_speedup_futhark": 3.8610446599703616,
+      "jac_speedup_jax": 2.595090838209343,
+      "jac_speedup_jax-vmap": 38.658937794205066,
+      "jac_speedup_pytorch": 11.603260469678215,
+      "jacobian": 3911.039972305298,
+      "jacobian_std": 730.1100334292709,
+      "objective": 1471.9648003578186,
+      "objective_std": 123.37979553463022,
+      "overhead": 2.65702003971465
+    }
+  },
+  "data/lstm-bs1024-n300-d80-h256": {
+    "futhark": {
+      "jac_speedup_jax": 0.5161772417781972,
+      "jac_speedup_jax-vmap": 3.8281780842774458,
+      "jac_speedup_pytorch": 3.285122343292726,
+      "jac_speedup_torch.nn.LSTM": 0.14847793383593377,
+      "jacobian": 225282.1,
+      "objective": 57558.1,
+      "overhead": 3.9139947288044605
+    },
+    "jax": {
+      "jac_speedup_futhark": 1.937319042883535,
+      "jac_speedup_jax-vmap": 7.4164023022201055,
+      "jac_speedup_pytorch": 6.364330073863179,
+      "jac_speedup_torch.nn.LSTM": 0.287649128668356,
+      "jacobian": 116285.493,
+      "jacobian_std": 0.0,
+      "objective": 31552.865,
+      "objective_std": 0.0,
+      "overhead": 3.685417885190457
+    },
+    "jax-vmap": {
+      "jac_speedup_futhark": 0.26122086746879913,
+      "jac_speedup_jax": 0.13483626686495273,
+      "jac_speedup_pytorch": 0.85814250825606,
+      "jac_speedup_torch.nn.LSTM": 0.03878553467659758,
+      "jacobian": 862419.998,
+      "jacobian_std": 0.0,
+      "objective": 1130428.643,
+      "objective_std": 0.0,
+      "overhead": 0.7629141417641875
+    },
+    "pytorch": {
+      "jac_speedup_futhark": 0.3044026661721479,
+      "jac_speedup_jax": 0.15712572861466864,
+      "jac_speedup_jax-vmap": 1.1653076154358402,
+      "jac_speedup_torch.nn.LSTM": 0.045197078927390014,
+      "jacobian": 740079.2602539062,
+      "jacobian_std": 4129.571445352026,
+      "objective": 172203.5903930664,
+      "objective_std": 88322.43054155806,
+      "overhead": 4.297699360185377
+    },
+    "torch.nn.LSTM": {
+      "jac_speedup_futhark": 6.735007513675313,
+      "jac_speedup_jax": 3.4764576017643574,
+      "jac_speedup_jax-vmap": 25.782808161295765,
+      "jac_speedup_pytorch": 22.125323665419163,
+      "jacobian": 33449.420738220215,
+      "jacobian_std": 3949.81953545181,
+      "objective": 15509.97428894043,
+      "objective_std": 1718.0096735435495,
+      "overhead": 2.1566393415669114
+    }
+  }
+}
