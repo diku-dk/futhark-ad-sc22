@@ -55,8 +55,8 @@ def bench_all(
     for params in parameters:
         filename = gen_filename(*params, directory="data")
         tensors = read_tensors(filename)
-        lstm = LSTM(tensors, runs, filename, _lstm_cell, "jax")
-        lstm_vmap = LSTM(tensors, runs, filename, _lstm_vmap_cell, "jax-vmap")
+        lstm = LSTM(tensors, 1, filename, _lstm_cell, "jax")
+        lstm_vmap = LSTM(tensors, 1, filename, _lstm_vmap_cell, "jax-vmap")
         lstm.benchmark()
         lstm_vmap.benchmark()
         times[filename] = {lstm.kind: lstm.report(),

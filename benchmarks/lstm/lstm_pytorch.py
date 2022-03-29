@@ -14,7 +14,6 @@ print("Using device:", device)
 
 parameters = [(1024, 20, 300, 192), (1024, 300, 80, 256)]
 
-
 def equal(m1, m2):
     jacobians_equal = True
     for n in m1.jacobian.keys():

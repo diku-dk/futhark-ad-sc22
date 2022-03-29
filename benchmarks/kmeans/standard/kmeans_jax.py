@@ -15,10 +15,10 @@ data_dir = Path(__file__).parent / "data"
 
 
 class KMeans(Benchmark):
-    def __init__(self, name, runs):
+    def __init__(self, name, runs, kind, cost_fn):
         self.runs = runs
         self.name = name
-        self.kind = "jax"
+        self.kind = kind
 
     def prepare(self):
         _, k, max_iter, features = data_gen(self.name)
@@ -44,51 +44,14 @@ class KMeans(Benchmark):
         data_file = data_dir / f"{self.name}.out"
         if data_file.exists():
             out = tuple(futhark_data.load(open(data_file, "rb")))
-            assert np.allclose(
-                out, self.objective, rtol=1e-02, atol=1e-05
-            )
-
-
-class KMeansVMap(Benchmark):
-    def __init__(self, name, runs):
-        self.runs = runs
-        self.name = name
-        self.kind = "jax-vmap"
-
-    def prepare(self):
-        _, k, max_iter, features = data_gen(self.name)
-        self.max_iter = max_iter
-        self.features = features
-        self.clusters = jnp.flip(features[-int(k) :], (0,))
-
-    def calculate_objective(self, runs):
-        timings = np.zeros(runs + 1)
-        for i in range(runs + 1):
-            start = time_ns()
-            kmeans_fn = jax.jit(partial(kmeans, cost_vmap))
-            _t, _rmse, self.objective = jax.block_until_ready(
-                kmeans_fn(self.max_iter, self.clusters, self.features)
-            )
-            timings[i] = (time_ns() - start) / 1000
-        return timings
-
-    def calculate_jacobian(self, runs):
-        return np.zeros(runs + 1)
-
-    def validate(self):
-        data_file = data_dir / f"{self.name}.out"
-        if data_file.exists():
-            out = tuple(futhark_data.load(open(data_file, "rb")))
-            assert np.allclose(
-                out, self.objective, rtol=1e-02, atol=1e-05
-            )
+            assert np.allclose(out, self.objective, rtol=1e-02, atol=1e-05)
 
 
 def bench_all(runs, output, datasets=["kdd_cup", "random"], prec="f32"):
     times = {}
     for data in datasets:
-        kmeans = KMeans(data, runs)
-        kmeans_vmap = KMeansVMap(data, runs)
+        kmeans = KMeans(data, runs, "jax", cost)
+        kmeans_vmap = KMeans(data, runs, "jax-vmap", cost_vmap)
         kmeans.benchmark()
         kmeans_vmap.benchmark()
         times["data/" + data] = {
@@ -99,7 +62,7 @@ def bench_all(runs, output, datasets=["kdd_cup", "random"], prec="f32"):
             kmeans_vmap.kind: {
                 "objective": kmeans_vmap.objective_time,
                 "objective_std": kmeans_vmap.objective_std,
-            }
+            },
         }
     with open(output, "w") as f:
         json.dump(times, f, indent=2)
@@ -117,10 +80,13 @@ def cost(points, centers):
     min_dist = jnp.min(dists, axis=0)
     return min_dist.sum()
 
+
 def cost_vmap(features, clusters):
     dists = jax.vmap(
         lambda feature: jax.vmap(
-            lambda cluster: jnp.dot((feature - cluster), (feature - cluster))
+            lambda cluster: (
+                jax.vmap(lambda x, y: (x - y) * (x - y))(feature, cluster)
+            ).sum()
         )(clusters)
     )(features)
     min_dist = jnp.min(dists, axis=1)
@@ -136,8 +102,8 @@ def kmeans(cost_fn, max_iter, clusters, features, _tolerance=1):
 
     def body(v):
         t, rmse, clusters = v
-        f_vjp = grad(partial(cost_fn, features))
-        d, hes = jvp(f_vjp, [clusters], [jnp.ones(shape=clusters.shape)])
+        f_diff = grad(partial(cost_fn, features))
+        d, hes = jvp(f_diff, [clusters], [jnp.ones(shape=clusters.shape)])
         new_cluster = clusters - d / hes
         rmse = ((new_cluster - clusters) ** 2).sum()
         return t + 1, rmse, new_cluster

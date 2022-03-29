@@ -160,8 +160,8 @@ def r(n):
     return round(n, 1)
 
 
-def latex(name, jac_speedup, obj_speedup, paths=get_results()):
-    d = process(paths, jac_speedup, obj_speedup)
+def latex(name, jac_speedup, obj_speedup, res):
+    d = json.load(open(res))
     if name == "gmm":
         d0 = d["data/1k/gmm_d64_K200"]
         d1 = d["data/1k/gmm_d128_K200"]

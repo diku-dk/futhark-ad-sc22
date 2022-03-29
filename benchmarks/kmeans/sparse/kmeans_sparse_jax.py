@@ -9,7 +9,7 @@ import jax
 import numpy as np
 import torch
 from benchmark import Benchmark
-from jax import grad
+from jax import grad, jvp
 from jax import numpy as jnp
 from jax.experimental import sparse
 from jax.experimental.sparse import sparsify
