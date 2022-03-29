@@ -131,7 +131,7 @@ class LSTM(Benchmark):
         # jac = tuple(futhark_data.load(open(f"{self.filename}.J", "rb")))[0]
         # assert np.allclose(jac, self.jacobian, rtol=1e-02, atol=1e-05)
 
-
+@jit
 def _lstm_cell(state, weights: LSTM_WEIGHTS, input):
     h, c = state
     i = sigmoid(
@@ -148,11 +148,11 @@ def _lstm_cell(state, weights: LSTM_WEIGHTS, input):
     h = o * tanh(c)
     return jnp.stack((h, c)), h
 
-
+@jit
 def _vmap_mul(a, b):
     return vmap(lambda alpha: vmap(lambda beta: jnp.sum(alpha * beta))(b.T))(a)
 
-
+@jit
 def _lstm_vmap_cell(state, weights: LSTM_WEIGHTS, input):
     h, c = state
     i = sigmoid(
@@ -169,7 +169,7 @@ def _lstm_vmap_cell(state, weights: LSTM_WEIGHTS, input):
     h = o * tanh(c)
     return jnp.stack((h, c)), h
 
-
+@jit
 def _init_lstm_weights(rng_key, in_dim, hid_dim):
     in_key, hid_key = split(rng_key)
     in_weights = normal(in_key, (4, in_dim, hid_dim))
@@ -177,7 +177,7 @@ def _init_lstm_weights(rng_key, in_dim, hid_dim):
     bias = jnp.zeros((4, hid_dim))
     return LSTM_WEIGHTS(*in_weights, *hid_weights, *bias)
 
-
+@jit
 def rnn(hid_dim=5, num_layers=2, lstm_cell=_lstm_vmap_cell):
     def init(rng_seed, in_dim):
         weight_key, state_key = split(rng_seed)
