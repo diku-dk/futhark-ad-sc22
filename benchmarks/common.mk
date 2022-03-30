@@ -1,17 +1,23 @@
 ifeq ($(GPU), A100)
 	RESULTS=results-a100.json
+	FUTHARK_BACKEND=cuda
 else ifeq ($(GPU), 2080TI)
 	RESULTS=results-2080ti.json
+	FUTHARK_BACKEND=cuda
 else ifeq ($(GPU), Q6000)
 	RESULTS=results-q6000.json
+	FUTHARK_BACKEND=cuda
+else ifeq ($(GPU), MI100)
+	RESULTS=results-mi100.json
+        FUTHARK_BACKEND=opencl
 else
 	RESULTS=results.json
+	FUTHARK_BACKEND=cuda
 endif
 JAC_SPEEDUP=True
 OBJ_SPEEDUP=False
 RUNS=10
 FUTHARK=futhark
-FUTHARK_BACKEND=cuda
 FUTHARK_BENCH_OPTIONS=--pass-option=--default-tile-size=$(FUTHARK_TILE_SIZE) --pass-option=--default-reg-tile=$(FUTHARK_REG_TILE)
 PYTHONPATH=../..:..:$PYTHONPATH
 PYTHON=python
