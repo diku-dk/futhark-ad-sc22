@@ -1,0 +1,38 @@
+{
+  "data/kdd_cup": {
+    "futhark": {
+      "obj_speedup_manual": 0.6925425758943258,
+      "obj_speedup_pytorch": 2.6557804401861667,
+      "objective": 35565.9
+    },
+    "manual": {
+      "obj_speedup_futhark": 1.443954544900917,
+      "obj_speedup_pytorch": 3.8348262368657737,
+      "objective": 24630.9
+    },
+    "pytorch": {
+      "obj_speedup_futhark": 0.37653715076307337,
+      "obj_speedup_manual": 0.2607680083093689,
+      "objective": 94455.22155761719,
+      "objective_std": 1260.92510425949
+    }
+  },
+  "data/random": {
+    "futhark": {
+      "obj_speedup_manual": 2.1417445779461888,
+      "obj_speedup_pytorch": 3.8251996864324513,
+      "objective": 10503.4
+    },
+    "manual": {
+      "obj_speedup_futhark": 0.46690908444318,
+      "obj_speedup_pytorch": 1.7860204834045152,
+      "objective": 22495.6
+    },
+    "pytorch": {
+      "obj_speedup_futhark": 0.26142426068549734,
+      "obj_speedup_manual": 0.559903992866755,
+      "objective": 40177.60238647461,
+      "objective_std": 41.20048251488547
+    }
+  }
+}
