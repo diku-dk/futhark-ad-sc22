@@ -11,6 +11,11 @@ else ifeq ($(GPU), 2080TI)
 	FUTHARK_TILE_SIZE=8
 	FUTHARK_REG_TILE=4
         PRECISION=f32
+else ifeq ($(GPU), MI100)
+	FUTHARK_TUNING=--tuning=.tuning.mi100
+	FUTHARK_TILE_SIZE=16
+	FUTHARK_REG_TILE=3
+        PRECISION=f64
 else
         FUTHARK_BENCH_OPTIONS=
 endif
