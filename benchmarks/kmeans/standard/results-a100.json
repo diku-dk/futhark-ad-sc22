@@ -78,7 +78,7 @@
       "objective": 8726.8159866333,
       "objective_std": 96.08125116945575
     }
-  }
+  },
   "data/k1024-d10-n2000000": {
     "futhark": {
       "obj_speedup_jax": 1.895826346860081,
