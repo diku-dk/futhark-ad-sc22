@@ -88,12 +88,9 @@ def euclid_dist(xs, ys):
 
 
 def cost_vmap(features, clusters):
-    dists = vmap(
-        lambda feature: vmap(lambda cluster: euclid_dist(feature, cluster))(clusters)
-    )(features)
-    min_dist = vmap(lambda d: jnp.min(d))(dists)
-    return min_dist.sum()
-
+    return vmap(
+        lambda feature: jnp.min(vmap(lambda cluster: euclid_dist(feature, cluster))(clusters))
+    )(features).sum()
 
 @jit
 def kmeans(max_iter, clusters, features, _tolerance=1):
