@@ -49,7 +49,7 @@ class KMeans(Benchmark):
             print(f"{self.kind}: validates on {self.name}")
 
 
-def bench_all(runs, output, datasets=["kdd_cup", "random"], prec="f32"):
+def bench_all(runs, output, datasets=["kdd_cup", "random", "k1024-d10-n2000000"], prec="f32"):
     times = {}
     for data in datasets:
         _kmeans = KMeans(data, runs, "jax", kmeans)
