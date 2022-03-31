@@ -91,7 +91,7 @@ def cost_vmap(features, clusters):
     dists = vmap(
         lambda feature: vmap(lambda cluster: euclid_dist(feature, cluster))(clusters)
     )(features)
-    min_dist = jnp.min(dists, axis=1)
+    min_dist = vmap(lambda d: jnp.min(d))(dists)
     return min_dist.sum()
 
 
