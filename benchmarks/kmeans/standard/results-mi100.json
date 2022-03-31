@@ -34,5 +34,23 @@
       "objective": 40177.60238647461,
       "objective_std": 41.20048251488547
     }
+  },
+  "data/k1024-d10-n2000000": {
+    "futhark": {
+      "obj_speedup_manual": 1.1711872880396956,
+      "obj_speedup_pytorch": 8.716571287979237,
+      "objective": 264229.9
+    },
+    "manual": {
+      "obj_speedup_futhark": 0.8538344039523988,
+      "obj_speedup_pytorch": 7.442508450180345,
+      "objective": 309462.7
+    },
+    "pytorch": {
+      "obj_speedup_futhark": 0.11472400866830175,
+      "obj_speedup_manual": 0.13436330058527085,
+      "objective": 2303178.759765625,
+      "objective_std": 6605.29574753638
+    }
   }
 }
