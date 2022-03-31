@@ -2,8 +2,8 @@
 -- entry: calculate_objective
 -- input @ data/kdd_cup.in.gz output @ data/kdd_cup.out
 -- input @ data/random.in.gz output @ data/random.out
-
--- input @ data/k1024-d2-n100000000.in.gz
+-- input @ data/k1024-d10-n2000000-in.gz
+-- input @ data/k1024-d10-n3000000-in.gz
 
 let euclid_dist_2 [d] (pt1: [d]f32) (pt2: [d]f32): f32 =
   f32.sum (map (\x->x*x) (map2 (-) pt1 pt2))
