@@ -1,0 +1,4 @@
+[submodule "ADBench"]
+	path = ADBench
+	branch = futhark
+	url = git@github.com:diku-dk/ADBench.git
