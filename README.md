@@ -23,3 +23,19 @@ or
 ```
 $ export GPU=2080TI
 ```
+
+## Manifest
+
+This section describes every top-level directory and its purpose.
+
+* `ADBench/`: a Git submodule containing a fork of the main ADBench
+  repository, with Futhark implementations added.  We use only a small
+  amount of ADBench, but it is simpler to include all of it than to
+  try to exfiltrate the pertinent parts.  The Futhark implementations
+  reside in `ADBench/src/cpp/modules/futhark`.
+
+* `bin/`: precompiled binaries and scripts used in the artifact.
+
+* `futhark/`: a Git submodule containing the Futhark compiler extended
+  with support for AD.  This is the compiler used for the artifact,
+  and can be used to (re)produce the `bin/futhark` executable with `make bin/futhark -B`.
