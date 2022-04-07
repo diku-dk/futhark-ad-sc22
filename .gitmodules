@@ -1,4 +1,8 @@
 [submodule "ADBench"]
 	path = ADBench
 	branch = futhark
-	url = git@github.com:diku-dk/ADBench.git
+	url = https://github.com/diku-dk/ADBench.git
+[submodule "futhark"]
+	path = futhark
+        branch = clean-ad
+	url = https://github.com/diku-dk/futhark.git
