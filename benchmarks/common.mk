@@ -34,8 +34,11 @@ PRECISION=f32
 gen_results:
 	$(PYTHON_CMD) -c 'import benchmark; benchmark.dump("$(RESULTS)", jac_speedup=$(JAC_SPEEDUP), obj_speedup=$(OBJ_SPEEDUP))'
 
-latex: $(RESULTS)
+latex:
 	@$(PYTHON_CMD) -c 'import benchmark; benchmark.latex("$(NAME)", $(JAC_SPEEDUP), $(OBJ_SPEEDUP), "$(RESULTS)")'
+
+table:
+	@$(PYTHON_CMD) -c 'import benchmark; benchmark.table("$(NAME)", "$(RESULTS)")'
 
 .PHONY: clean results
 

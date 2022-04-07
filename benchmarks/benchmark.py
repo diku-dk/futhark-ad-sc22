@@ -2,6 +2,7 @@ import json
 import os
 import re
 from abc import ABC, abstractmethod
+from prettytable import PrettyTable
 
 import numpy as np
 import torch
@@ -164,12 +165,73 @@ def r(n):
 def t(n):
     return f"{round(n, 1)}\\times"
 
+def t_(n):
+    return f"{round(n, 1)}x"
+
 def ml(f, d, k1, k2):
     try:
         return f'{f(d[k1][k2])}'
     except KeyError:
         return "\\varnothing"
 
+
+def table(name, res):
+    tab = PrettyTable()
+    d = json.load(open(res))
+    if name == "gmm":
+        d0 = d["data/f64/1k/gmm_d64_K200"]
+        d1 = d["data/f64/1k/gmm_d128_K200"]
+        d2 = d["data/f64/10k/gmm_d32_K200"]
+        d3 = d["data/f64/10k/gmm_d64_K25"]
+        d4 = d["data/f64/10k/gmm_d128_K25"]
+        d5 = d["data/f64/10k/gmm_d128_K200"]
+        tab.field_names = ["Measurement", "D0", "D1", "D2", "D3", "D4", "D5"]
+        tab.add_rows(
+         [ ["PyT. Jacob. (ms)", ms_(d0['pytorch']['jacobian']), ms_(d1['pytorch']['jacobian']), ms_(d2['pytorch']['jacobian']), ms_(d3['pytorch']['jacobian']), ms_(d4['pytorch']['jacobian']), ms_(d5['pytorch']['jacobian'])],
+           ["Fut. Speedup (x)",  r(d0['futhark']['jac_speedup_pytorch']), r(d1['futhark']['jac_speedup_pytorch']), r(d2['futhark']['jac_speedup_pytorch']), r(d3['futhark']['jac_speedup_pytorch']), r(d4['futhark']['jac_speedup_pytorch']), r(d5['futhark']['jac_speedup_pytorch'])],
+           ["PyT. Overhead (x)", r(d0['pytorch']['overhead']), r(d1['futhark']['overhead']), r(d2['futhark']['overhead']), r(d3['futhark']['overhead']), r(d4['futhark']['overhead']), r(d5['futhark']['overhead'])],
+           ["Fut. Overhead (x)", r(d0['futhark']['overhead']), r(d1['futhark']['overhead']), r(d2['futhark']['overhead']), r(d3['futhark']['overhead']), r(d4['futhark']['overhead']), r(d5['futhark']['overhead'])],
+         ]
+        )
+        print(tab)
+
+    elif name == "lstm":
+        d0 = d["data/lstm-bs1024-n20-d300-h192"]
+        d1 = d["data/lstm-bs1024-n300-d80-h256"]
+        tab.field_names = ["", "PyTorch Jacob.", "Futhark", "nn.LSTM", "JAX", "JAX(Vmap)"]
+        tab.add_rows(
+          [ ["D0", ms(d0['pytorch']['jacobian']), t_(d0['futhark']['jac_speedup_pytorch']), t_(d0['torch.nn.LSTM']['jac_speedup_pytorch']), ml(t_,d0,'jax','jac_speedup_pytorch'), ml(t_,d0,'jax-vmap','jac_speedup_pytorch')],
+            ["D1", ms(d1['pytorch']['jacobian']), t_(d1['futhark']['jac_speedup_pytorch']), t_(d1['torch.nn.LSTM']['jac_speedup_pytorch']), ml(t_,d1,'jax','jac_speedup_pytorch'), ml(t_,d1,'jax-vmap','jac_speedup_pytorch')]
+
+          ]
+        )
+        print(tab)
+
+    elif name == "kmeans":
+        d0 = d["data/kdd_cup"]
+        d1 = d["data/random"]
+        d2 = d["data/k1024-d10-n2000000"]
+        tab.field_names = ["Data", "Manual", "AD", "PyTorch", "JAX", "JAX(VMap)"]
+        tab.add_rows(
+          [ ["D0", ms(d0['manual']['objective']),ms(d0['futhark']['objective']), ms(d0['pytorch']['objective']), ml(ms, d0, 'jax', 'objective'), ml(ms, d0, 'jax-vmap', 'objective')],
+            ["D1", ms(d1['manual']['objective']),ms(d1['futhark']['objective']), ms(d1['pytorch']['objective']), ml(ms, d1, 'jax', 'objective'), ml(ms, d1, 'jax-vmap', 'objective')],
+            ["D2", ms(d2['manual']['objective']),ms(d2['futhark']['objective']), ms(d2['pytorch']['objective']), ml(ms, d2, 'jax', 'objective'), ml(ms, d2, 'jax-vmap', 'objective')]
+          ]
+        )
+        print(tab)
+
+    elif name == "kmeans_sparse":
+        d0 = d["data/movielens"]
+        d1 = d["data/nytimes"]
+        d2 = d["data/scrna"]
+        tab.field_names = ["Workload", "Manual", "AD", "PyTorch", "JAX"]
+        tab.add_rows(
+          [ ["movielens",  s(d0['manual']['objective']), s(d0['futhark']['objective']), s(d0['pytorch']['objective']), ml(s,d0,'jax','objective')],
+            ["nytimes",  s(d1['manual']['objective']), s(d1['futhark']['objective']), s(d1['pytorch']['objective']), ml(s,d1,'jax','objective')],
+            ["scrna",  s(d2['manual']['objective']), s(d2['futhark']['objective']), s(d2['pytorch']['objective']), ml(s,d2,'jax','objective')]
+          ]
+        )
+        print(tab)
 
 def latex(name, jac_speedup, obj_speedup, res):
     d = json.load(open(res))
@@ -194,21 +256,23 @@ def latex(name, jac_speedup, obj_speedup, res):
         d1 = d["data/lstm-bs1024-n300-d80-h256"]
         print(
             f"""
-           \\multicolumn{{1}}{{c|}}{{$\\mathbf{{D_0}}$}} & \\multicolumn{{1}}{{c|}}{{${ms(d0['pytorch']['jacobian'])}$}}  &  {r(d0['futhark']['jac_speedup_pytorch'])} & {r(d0['torch.nn.LSTM']['jac_speedup_pytorch'])} & ${ml(r,d0,'jax','jac_speedup_pytorch')}$ & ${ml(r,d0,'jax-vmap','jac_speedup_pytorch')}$ \\\\ 
-           \\multicolumn{{1}}{{c|}}{{$\\mathbf{{D_1}}$}} & \\multicolumn{{1}}{{c|}}{{${ms(d1['pytorch']['jacobian'])}$}}  &  {r(d1['futhark']['jac_speedup_pytorch'])} & {r(d1['torch.nn.LSTM']['jac_speedup_pytorch'])} & ${ml(r,d1,'jax','jac_speedup_pytorch')}$ & ${ml(r,d1,'jax-vmap','jac_speedup_pytorch')}$ \\\\""")
+           \\multicolumn{{1}}{{c|}}{{$\\mathbf{{D}}_0$}} & \\multicolumn{{1}}{{c|}}{{${ms(d0['pytorch']['jacobian'])}$}}  & ${t(d0['futhark']['jac_speedup_pytorch'])}$ & ${t(d0['torch.nn.LSTM']['jac_speedup_pytorch'])}$ & ${ml(t,d0,'jax','jac_speedup_pytorch')}$ & ${ml(t,d0,'jax-vmap','jac_speedup_pytorch')}$ \\\\ 
+           \\multicolumn{{1}}{{c|}}{{$\\mathbf{{D}}_1$}} & \\multicolumn{{1}}{{c|}}{{${ms(d1['pytorch']['jacobian'])}$}}  & ${t(d1['futhark']['jac_speedup_pytorch'])}$ & ${t(d1['torch.nn.LSTM']['jac_speedup_pytorch'])}$ & ${ml(t,d1,'jax','jac_speedup_pytorch')}$ & ${ml(t,d1,'jax-vmap','jac_speedup_pytorch')}$ \\\\""")
         print(
             f"""
-           \\multicolumn{{1}}{{c|}}{{$\\mathbf{{D_0}}$}} & {r(d0['pytorch']['overhead'])} & {r(d0['futhark']['overhead'])}  & {r(d0['torch.nn.LSTM']['overhead'])} & ${ml(r,d0,'jax','overhead')}$ & ${ml(r,d0,'jax-vmap','overhead')}$\\\\
-           \\multicolumn{{1}}{{c|}}{{$\\mathbf{{D_1}}$}} & {r(d1['pytorch']['overhead'])} & {r(d1['futhark']['overhead'])}  & {r(d1['torch.nn.LSTM']['overhead'])} & ${ml(r,d1,'jax','overhead')}$ & ${ml(r,d1,'jax-vmap','overhead')}$\\\\\\hline"""
+           \\multicolumn{{1}}{{c|}}{{$\\mathbf{{D}}_0$}} & ${t(d0['pytorch']['overhead'])}$ & ${t(d0['futhark']['overhead'])}$  & ${t(d0['torch.nn.LSTM']['overhead'])}$ & ${ml(t,d0,'jax','overhead')}$ & ${ml(t,d0,'jax-vmap','overhead')}$\\\\
+           \\multicolumn{{1}}{{c|}}{{$\\mathbf{{D}}_1$}} & ${t(d1['pytorch']['overhead'])}$ & ${t(d1['futhark']['overhead'])}$  & ${t(d1['torch.nn.LSTM']['overhead'])}$ & ${ml(t,d1,'jax','overhead')}$ & ${ml(t,d1,'jax-vmap','overhead')}$\\\\\\hline"""
         )
 
     elif name == "kmeans":
         d0 = d["data/kdd_cup"]
         d1 = d["data/random"]
+        d2 = d["data/k1024-d10-n2000000"]
         print(
             f"""
   & \\multicolumn{{1}}{{c|}}{{$\\mathbf{{D}}_0$}}   & ${ms(d0['manual']['objective'])}$ & ${ms(d0['futhark']['objective'])}$   & ${ms(d0['pytorch']['objective'])}$ & ${ml(ms, d0, 'jax', 'objective')}$ & ${ml(ms, d0, 'jax-vmap', 'objective')}$\\\\
-  & \\multicolumn{{1}}{{c|}}{{$\\mathbf{{D}}_1$}}   & ${ms(d1['manual']['objective'])}$ & ${ms(d1['futhark']['objective'])}$   & ${ms(d1['pytorch']['objective'])}$ & ${ml(ms, d1, 'jax', 'objective')}$ & ${ml(ms, d1, 'jax-vmap', 'objective')}$\\\\ \\hline
+  & \\multicolumn{{1}}{{c|}}{{$\\mathbf{{D}}_1$}}   & ${ms(d1['manual']['objective'])}$ & ${ms(d1['futhark']['objective'])}$   & ${ms(d1['pytorch']['objective'])}$ & ${ml(ms, d1, 'jax', 'objective')}$ & ${ml(ms, d1, 'jax-vmap', 'objective')}$\\\\
+  & \\multicolumn{{1}}{{c|}}{{$\\mathbf{{D}}_2$}}   & ${ms(d2['manual']['objective'])}$ & ${ms(d2['futhark']['objective'])}$   & ${ms(d2['pytorch']['objective'])}$ & ${ml(ms, d2, 'jax', 'objective')}$ & ${ml(ms, d2, 'jax-vmap', 'objective')}$\\\\ \\hline
     """
         )
 
