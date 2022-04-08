@@ -4,12 +4,14 @@
 -- entry: calculate_objective
 -- input @ data/small.in.gz
 -- output { 945990i64 }
+
 -- no_rtx2080 no_k40 no_gtx780 input @ data/large.in.gz
 -- output { 952131i64 }
 
 -- ==
 -- entry: calculate_jacobian
 -- input @ data/small.in.gz
+
 -- input @ data/large.in.gz
 
 type nuclide_grid_point = [6]f64

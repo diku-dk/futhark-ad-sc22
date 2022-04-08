@@ -17,6 +17,11 @@ tmp/rsbench-original.txt:
 	  for i in $$(seq 10); do ./rsbench -s small -m event | grep Runtime | tail -n 1; done) \
           | awk '{print $$2}' | tee $@ || rm -f $@
 
+tmp/xsbench-futhark.json: bin/futhark
+	bin/futhark bench --backend opencl benchmarks/xsbench/xsbench.fut --json $@
+
+tmp/rsbench-futhark.json: bin/futhark
+	bin/futhark bench --backend opencl benchmarks/rsbench/rsbench.fut --json $@
 
 figure_10: tmp/xsbench-original.txt tmp/rsbench-original.txt tmp/xsbench-futhark.json tmp/rsbench-futhark.json
 	false

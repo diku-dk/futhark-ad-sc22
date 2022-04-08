@@ -1,11 +1,13 @@
 -- ==
 -- entry: calculate_objective
 -- input @ data/small.in.gz output { 880018i64 }
+
 -- input @ data/large.in.gz output { 358389i64 }
 
 -- ==
 -- entry: calculate_jacobian
 -- input @ data/small.in.gz
+
 -- input @ data/large.in.gz
 
 type input =
