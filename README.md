@@ -39,3 +39,6 @@ This section describes every top-level directory and its purpose.
 * `futhark/`: a Git submodule containing the Futhark compiler extended
   with support for AD.  This is the compiler used for the artifact,
   and can be used to (re)produce the `bin/futhark` executable with `make bin/futhark -B`.
+
+* `tmp/`: used for storing raw results from running the benchmarks.
+  (ADBench contains its own temporary directory.)
