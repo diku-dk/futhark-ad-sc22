@@ -1,7 +1,10 @@
-figure_9:
+figure_6:
 	nix-shell --pure --run ./setup-adbench.sh
 	nix-shell --pure --run ./run-adbench.sh
-	python3 scripts/figure_9.py
+	python3 scripts/figure_6.py
+
+figure_7: tmp/xsbench-original.txt tmp/rsbench-original.txt tmp/lbm-original.txt tmp/xsbench-futhark.json tmp/rsbench-futhark.json tmp/lbm-futhark.json
+	python3 scripts/figure_7.py
 
 tmp/xsbench-original.txt:
 	mkdir -p tmp
@@ -17,14 +20,19 @@ tmp/rsbench-original.txt:
 	  for i in $$(seq 10); do ./rsbench -s small -m event | grep Runtime | tail -n 1; done) \
           | awk '{print $$2}' | tee $@ || rm -f $@
 
+tmp/lbm-original.txt:
+	mkdir -p tmp
+	(for i in $$(seq 10); do make -C originals/lbm run; done) \
+          | awk '/Kernel/ {print $$3}' | tee $@ || rm -f $@
+
 tmp/xsbench-futhark.json: bin/futhark
 	bin/futhark bench --backend opencl benchmarks/xsbench/xsbench.fut --json $@
 
 tmp/rsbench-futhark.json: bin/futhark
 	bin/futhark bench --backend opencl benchmarks/rsbench/rsbench.fut --json $@
 
-figure_10: tmp/xsbench-original.txt tmp/rsbench-original.txt tmp/xsbench-futhark.json tmp/rsbench-futhark.json
-	false
+tmp/lbm-futhark.json: bin/futhark
+	bin/futhark bench --backend opencl benchmarks/lbm/lbm.fut --json $@
 
 bin/futhark:
 	cd futhark && nix-build --argstr suffix ad
