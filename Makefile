@@ -25,13 +25,13 @@ tmp/lbm-original.txt:
 	(for i in $$(seq 10); do make -C originals/lbm run; done) \
           | awk '/Kernel/ {print $$3}' | tee $@ || rm -f $@
 
-tmp/xsbench-futhark.json: bin/futhark
+tmp/xsbench-futhark.json:
 	bin/futhark bench --backend opencl benchmarks/xsbench/xsbench.fut --json $@
 
-tmp/rsbench-futhark.json: bin/futhark
+tmp/rsbench-futhark.json:
 	bin/futhark bench --backend opencl benchmarks/rsbench/rsbench.fut --json $@
 
-tmp/lbm-futhark.json: bin/futhark
+tmp/lbm-futhark.json:
 	bin/futhark bench --backend opencl benchmarks/lbm/lbm.fut --json $@
 
 bin/futhark:

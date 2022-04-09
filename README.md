@@ -1,7 +1,7 @@
 # futhark-ad-sc22
 Artifact for the Futhark AD submission to SC22
 
-# Set-up
+## Set-up
 1. Set the `PYTHON` env variable to be your Python binary. Note that Python 3.7 or greater is required:
 ```
 export PYTHON=python
@@ -23,6 +23,20 @@ or
 ```
 $ export GPU=2080TI
 ```
+
+## Reproducing individual tables
+
+Some of the figures in the paper contain results from multiple
+machines.  The commands below only produce results for a single
+machine (the one you are running on).  A comparison between machines
+is not a contribution of the paper, so the artifact doesn't deal with
+it.
+
+* **Figure 6**: `make figure_6`.
+
+* **Figure 7**: `make figure_7`.  Note that the Enzyme overheads are
+  not computed by this artifact, but simply copied from the Enzyme
+  paper for reference.
 
 ## Manifest
 
