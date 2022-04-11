@@ -15,7 +15,7 @@ figure_9:
 figure_11:
 	cd benchmarks/gmm && make results && make table
 
-figure_12:
+figure_12_13:
 	cd benchmarks/lstm && make results && make table
 
 tmp/xsbench-original.txt:

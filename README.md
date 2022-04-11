@@ -70,7 +70,7 @@ is the default working directory).
 
 * **Figure 11**: `make figure_11`.
 
-* **Figure 12**: `make figure_12`.
+* **Figures 12 and 13**: `make figure_12_13`.
 
 Note: Some of the figures in the paper contain results from multiple
 machines.  The commands below only produce results for a single
