@@ -1,0 +1,25 @@
+FROM rocm/pytorch:rocm5.0.1_ubuntu18.04_py3.7_pytorch_staging
+
+RUN apt-get update
+RUN apt-get install -y sudo git curl git-lfs vim
+RUN apt-get install -y python3 python3-pip
+RUN ln -s -f /bin/true /usr/bin/chfn
+
+RUN adduser --gecos '' --disabled-password bench
+RUN echo "bench ALL=(ALL) NOPASSWD:ALL" > /etc/sudoers
+USER bench
+
+RUN pip3 install futhark-data prettytable
+
+RUN [ "/bin/bash", "-c", "sh <(curl -L https://nixos.org/nix/install) --no-daemon" ]
+ENV PATH=/home/bench/futhark-ad-sc22/bin:/home/bench/.local/bin:/home/bench/.nix-profile/bin:$PATH
+ENV GPU=MI100
+ENV PYTHON=python3
+
+RUN git lfs install
+WORKDIR /home/bench/
+RUN git clone https://github.com/diku-dk/futhark-ad-sc22
+WORKDIR /home/bench/futhark-ad-sc22
+RUN git submodule update --init ADBench
+RUN git submodule update --init futhark
+RUN make -B bin/futhark
