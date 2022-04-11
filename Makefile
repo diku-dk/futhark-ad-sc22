@@ -38,13 +38,13 @@ tmp/lbm-original.txt:
           | awk '/Kernel/ {print $$3}' | tee $@ || rm -f $@
 
 tmp/xsbench-futhark.json:
-	bin/futhark bench --backend opencl benchmarks/xsbench/xsbench.fut --json $@
+	bin/futhark bench --backend cuda benchmarks/xsbench/xsbench.fut --json $@
 
 tmp/rsbench-futhark.json:
-	bin/futhark bench --backend opencl benchmarks/rsbench/rsbench.fut --json $@
+	bin/futhark bench --backend cuda benchmarks/rsbench/rsbench.fut --json $@
 
 tmp/lbm-futhark.json:
-	bin/futhark bench --backend opencl benchmarks/lbm/lbm.fut --json $@
+	bin/futhark bench --backend cuda benchmarks/lbm/lbm.fut --json $@
 
 bin/futhark:
 	cd futhark && nix-build --argstr suffix ad
