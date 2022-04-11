@@ -57,7 +57,6 @@ class KMeansSparse(Benchmark):
             assert np.allclose(
                 out, self.objective.cpu().detach().numpy(), rtol=1e-02, atol=1e-02
             )
-        print(f"{self.kind}: validates on {self.name}")
 
 
 def bench_all(runs, output, datasets=["movielens", "nytimes", "scrna"], prec="f32"):

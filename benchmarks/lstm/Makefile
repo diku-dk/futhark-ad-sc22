@@ -17,6 +17,8 @@ else
         FUTHARK_BENCH_OPTIONS=
 endif
 
+.PHONY: results data
+
 results: data lstm.json lstm_pytorch.json lstm_jax.json
 	make gen_results
 

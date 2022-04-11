@@ -56,7 +56,6 @@ class KMeansSparse(Benchmark):
         if data_file.exists():
             out = tuple(futhark_data.load(open(data_file, "rb")))[0]
             assert np.allclose(out, self.objective, rtol=1e-02, atol=1e-05)
-            print(f"{self.kind}: validates on {self.name}")
 
 
 def get_clusters(k, values, indices, pointers, num_col):

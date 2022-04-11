@@ -15,5 +15,7 @@ else
         FUTHARK_BENCH_OPTIONS=
 endif
 
+.PHONY: results
+
 results: convert gmm.json gmm_pytorch.json
 	make gen_results
