@@ -6,6 +6,18 @@ figure_6:
 figure_7: tmp/xsbench-original.txt tmp/rsbench-original.txt tmp/lbm-original.txt tmp/xsbench-futhark.json tmp/rsbench-futhark.json tmp/lbm-futhark.json
 	python3 scripts/figure_7.py
 
+figure_8:
+	cd benchmarks/kmeans/standard && make results && make table
+
+figure_9:
+	cd benchmarks/kmeans/sparse && make results && make table
+
+figure_11:
+	cd benchmarks/gmm && make results && make table
+
+figure_12:
+	cd benchmarks/lstm && make results && make table
+
 tmp/xsbench-original.txt:
 	mkdir -p tmp
 	make -C originals/xsbench

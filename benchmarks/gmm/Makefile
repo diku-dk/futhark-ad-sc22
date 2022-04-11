@@ -20,7 +20,7 @@ else
         FUTHARK_BENCH_OPTIONS=
 endif
 
-$(RESULTS): convert gmm.json gmm_pytorch.json
+results: convert gmm.json gmm_pytorch.json
 	make gen_results
 
 .PHONY: convert

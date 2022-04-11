@@ -17,6 +17,7 @@ ENV PATH=/home/bench/futhark-ad-sc22/bin:/home/bench/.local/bin:/home/bench/.nix
 ENV LIBRARY_PATH=/usr/local/cuda/lib64
 ENV LD_LIBRARY_PATH=/usr/local/cuda/lib64/
 ENV CPATH=/usr/local/cuda/include
+ENV GPU=A100
 
 RUN git lfs install
 WORKDIR /home/bench/
