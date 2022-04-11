@@ -18,6 +18,8 @@ ENV LIBRARY_PATH=/usr/local/cuda/lib64
 ENV LD_LIBRARY_PATH=/usr/local/cuda/lib64/
 ENV CPATH=/usr/local/cuda/include
 ENV GPU=A100
+ENV FUTHARK=bin/futhark
+ENV PYTHON=python3
 
 RUN git lfs install
 WORKDIR /home/bench/
