@@ -3,6 +3,7 @@ FROM nvidia/cuda:11.6.1-devel-ubuntu20.04
 RUN apt-get update
 RUN apt-get install -y sudo git curl git-lfs vim
 RUN apt-get install -y python3 python3-pip
+RUN apt-get install -y nvidia-opencl-dev
 
 RUN adduser --gecos '' --disabled-password bench
 RUN echo "bench ALL=(ALL) NOPASSWD:ALL" > /etc/sudoers
@@ -18,7 +19,6 @@ ENV LIBRARY_PATH=/usr/local/cuda/lib64
 ENV LD_LIBRARY_PATH=/usr/local/cuda/lib64/
 ENV CPATH=/usr/local/cuda/include
 ENV GPU=A100
-ENV FUTHARK=bin/futhark
 ENV PYTHON=python3
 
 RUN git lfs install
