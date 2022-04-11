@@ -39,8 +39,8 @@ xsbench_enzyme_overhead = 3.2
 lbm_enzyme_overhead = 6.3
 
 print('Benchmark  |    Primal runtimes     |   AD overhead')
-print('           | Original      Futhark  | Futhark   Enzyme')
-print('-----------+------------------------+----------------------------')
+print('           | Original      Futhark  | Futhark   Enzyme (hardcoded)')
+print('-----------+------------------------+-----------------------------')
 print('RSBench    | %7.3fs      %6.3fs  | %6.1fx  %6.1fx'
       % (rsbench_original_seconds, rsbench_futhark_objective,
          rsbench_futhark_overhead, rsbench_enzyme_overhead))
