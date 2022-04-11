@@ -24,7 +24,6 @@ def equal(m1, m2):
     return (
         torch.allclose(m1.objective, m2.objective, 1e-03, 1e-03)
         and torch.allclose(m1.loss, m2.loss, 1e-03, 1e-03)
-        # and jacobians_equal
     )
 
 
@@ -64,7 +63,6 @@ def bench_all(runs, output, parameters=parameters, data_dir="data", prec="f32"):
         torchLSTM.benchmark()
         naiveLSTM.benchmark()
         assert equal(torchLSTM, naiveLSTM)
-        print(f"pytorch and torch.nn.LSTM: validates on filename")
         times[filename] = {
             "pytorch": naiveLSTM.report(),
             "torch.nn.LSTM": torchLSTM.report(),

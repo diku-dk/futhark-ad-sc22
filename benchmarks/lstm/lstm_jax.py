@@ -129,9 +129,6 @@ class LSTM(Benchmark):
     def validate(self):
         loss = tuple(futhark_data.load(open(f"{self.filename}.F", "rb")))[0]
         assert np.allclose(loss, self.loss, rtol=1e-02, atol=1e-05)
-        print(f"{self.kind}: validates on {self.filename}")
-        # jac = tuple(futhark_data.load(open(f"{self.filename}.J", "rb")))[0]
-        # assert np.allclose(jac, self.jacobian, rtol=1e-02, atol=1e-05)
 
 @jit
 def _lstm_cell(state, weights: LSTM_WEIGHTS, input):
