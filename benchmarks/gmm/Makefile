@@ -17,5 +17,5 @@ endif
 
 .PHONY: results
 
-results: convert gmm.json gmm_pytorch.json
+results: gmm.json gmm_pytorch.json
 	make gen_results
