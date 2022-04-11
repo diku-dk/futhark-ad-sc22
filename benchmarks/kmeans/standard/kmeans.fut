@@ -2,6 +2,9 @@
 -- entry: calculate_objective
 -- input @ data/kdd_cup.in.gz output @ data/kdd_cup.out
 -- input @ data/random.in.gz output @ data/random.out
+
+-- ==
+-- entry: calculate_objective2
 -- input @ data/k1024-d10-n2000000.in.gz
 
 let euclid_dist_2 [d] (pt1: [d]f32) (pt2: [d]f32): f32 =
@@ -35,3 +38,5 @@ entry calculate_objective [n][d]
       < tolerance
     in (new_centres, i+1, stop)
   in cluster_centres
+
+entry calculate_objective2 = calculate_objective

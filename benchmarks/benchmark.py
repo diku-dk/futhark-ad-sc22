@@ -80,18 +80,23 @@ def set_precision(prec):
     else:
         sys.exit("Error: invalid precision " + prec)
 
+def union_dict(dict1, dict2):
+    return dict(list(dict1.items()) + list(dict2.items()))
 
 def process_futhark(name, path, source, basename):
     name = "futhark" if name == basename else re.sub("^.*_", "", basename)
     with open(path, "r") as f:
         fut = json.load(f)
-        objective = fut[source + ":calculate_objective"]["datasets"]
+        if source + ":calculate_objective2" in fut:
+          objective = union_dict(fut[source + ":calculate_objective"]["datasets"], fut[source + ":calculate_objective2"]["datasets"])
+        else:
+          objective = fut[source + ":calculate_objective"]["datasets"]
         res = {}
         for d in objective.keys():
             objs = objective[d]["runtimes"]
             obj_time = sum(objs) / len(objs)
             (d_, _) = os.path.splitext(d)
-            if len(list(fut.values())) > 1:
+            if source + ":calculate_jacobian" in fut:
                 jacobian = fut[source + ":calculate_jacobian"]["datasets"]
                 jacs = jacobian[d]["runtimes"]
                 jac_time = sum(jacs) / len(jacs)
