@@ -45,7 +45,8 @@ Alternatively, the container image may be built by running
 
     docker build -t zfnmxt/futhark-ad-sc22 .
     
-within the root directory of this repository.
+within the root directory of this repository. Note that this will
+likely take a very long time.
 
 ## Running experiments
 The docker container may be run interactively with
