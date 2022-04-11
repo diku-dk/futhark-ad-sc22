@@ -205,7 +205,19 @@ def table(name, res):
 
           ]
         )
+        print("Speedups:")
         print(tab)
+        overheads = PrettyTable()
+        overheads.field_names = ["", "Pytorch", "Futhark", "nn.LSTM", "JAX", "JAX(Vmap)"]
+        overheads.add_rows(
+          [ ["D0", t_(d0['pytorch']['overhead']), t_(d0['futhark']['overhead']), t_(d0['torch.nn.LSTM']['overhead']), ml(t_,d0,'jax','overhead'), ml(t_,d0,'jax-vmap','overhead')],
+            ["D1", t_(d1['pytorch']['overhead']), t_(d1['futhark']['overhead']), t_(d1['torch.nn.LSTM']['overhead']), ml(t_,d1,'jax','overhead'), ml(t_,d1,'jax-vmap','overhead')]
+
+          ]
+        )
+        print("Overheads:")
+        print(overheads)
+
 
     elif name == "kmeans":
         d0 = d["data/kdd_cup"]
