@@ -35,10 +35,9 @@ class KMeans(Benchmark):
             assert np.allclose(
                 out, self.objective.cpu().detach().numpy(), rtol=1e-02, atol=1e-05
             )
-            print(f"{self.kind}: validates on {self.name}")
 
 
-def bench_all(runs, output, datasets=["kdd_cup", "random"], prec="f32"):
+def bench_all(runs, output, datasets=["kdd_cup", "random", "k1024-d10-n2000000"], prec="f32"):
     set_precision(prec)
     times = {}
     for data in datasets:

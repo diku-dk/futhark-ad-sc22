@@ -17,7 +17,7 @@ else
         FUTHARK_BENCH_OPTIONS=
 endif
 
-$(RESULTS): data lstm.json lstm_pytorch.json lstm_jax.json
+results: data lstm.json lstm_pytorch.json lstm_jax.json
 	make gen_results
 
 data:
