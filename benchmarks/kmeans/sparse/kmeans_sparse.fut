@@ -115,6 +115,6 @@ entry calculate_objective [nnz][np1]
 
 -- ==
 -- entry: calculate_objective
--- compiled input @ data/movielens.in.gz
+-- compiled input @ data/movielens.in.gz output @ data/movielens.out
 -- compiled input @ data/nytimes.in.gz
--- compiled input @ data/scrna.in.gz output @ data/scrna.out
+-- compiled input @ data/scrna.in.gz output
