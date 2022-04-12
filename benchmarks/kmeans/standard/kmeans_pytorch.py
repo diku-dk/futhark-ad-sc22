@@ -33,7 +33,7 @@ class KMeans(Benchmark):
         if data_file.exists():
             out = tuple(futhark_data.load(open(data_file, "rb")))
             assert np.allclose(
-                out, self.objective.cpu().detach().numpy(), rtol=1e-02, atol=1e-05
+                out[0], self.objective.cpu().detach().numpy(), rtol=1e-02, atol=1e-03
             )
 
 
