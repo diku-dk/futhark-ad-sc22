@@ -1,3 +1,0 @@
-require {
-  github.com/diku-dk/linalg 0.4.2 #0720168d510eba755a96498f660152e5f4a29eef
-}
