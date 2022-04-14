@@ -39,9 +39,7 @@ latex:
 table:
 	@$(PYTHON_CMD) -c 'import benchmark; benchmark.table("$(NAME)", "$(RESULTS)")'
 
-.PHONY: clean results
-
-results: $(RESULTS)
+.PHONY: clean
 
 clean:
 	rm -rf *.json *.c *.actual *.expected __pycache__
