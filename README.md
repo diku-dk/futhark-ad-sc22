@@ -69,7 +69,7 @@ is the default working directory):
 * **Figures 12 and 13**: `make figure_12_13`.
 
 Note: Some of the figures in the paper contain results from multiple
-machines.  The commands below only produce results for a single
+machines.  The commands above only produce results for a single
 machine (the one you are running on).  A comparison between machines
 is not a contribution of the paper, so the artifact doesn't deal with
 it.
