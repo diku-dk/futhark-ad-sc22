@@ -1,8 +1,8 @@
 # futhark-ad-sc22
 This is the artifact for the Futhark AD submission to SC22; this
-repository contains all source code and data required to reproduce the
-figures in the Futhark AD submission to SC22, "AD for an Array
-Language with Nested Parallelism".
+repository contains all source code and data required to reproduce
+figures 6/7/8/9/11/12/13 in the Futhark AD submission to SC22, "AD for
+an Array Language with Nested Parallelism".
 
 The artifact is distributed as a Docker container.
 
