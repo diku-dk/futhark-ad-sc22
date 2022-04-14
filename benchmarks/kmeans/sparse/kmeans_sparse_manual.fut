@@ -129,6 +129,6 @@ entry calculate_objective [nnz][np1]
 -- Manual version of sparse-kmeans for k=10
 -- ==
 -- entry: calculate_objective
--- compiled input @ data/movielens.in.gz output @ data/movielens.out
+-- compiled input @ data/movielens.in.gz
 -- compiled input @ data/nytimes.in.gz
--- compiled input @ data/scrna.in.gz output
+-- compiled input @ data/scrna.in.gz output @ data/movielens.out
