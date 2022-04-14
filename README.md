@@ -83,19 +83,18 @@ This section describes every top-level directory and its purpose.
   try to exfiltrate the pertinent parts.  The Futhark implementations
   reside in `ADBench/src/cpp/modules/futhark`.
 
+* `benchmarks/`: contains the source code and data for all benchmarks
+  except for the ADBench benchmark.
+
 * `bin/`: precompiled binaries and scripts used in the artifact.
 
 * `futhark/`: a Git submodule containing the Futhark compiler extended
   with support for AD.  This is the compiler used for the artifact,
   and can be used to (re)produce the `bin/futhark` executable with `make bin/futhark -B`.
 
+* `originals/`: original sources for the `lbm`, `rsbench` and `xsbench`
+  benchmarks to compare against.
+
 * `tmp/`: used for storing raw results from running some of the benchmarks.
   (ADBench contains its own temporary directory, select other benchmarks store
   results in other folders.)
-  
-* `originals/`: original sources for the `lbm`, `rsbench` and `xsbench`
-  benchmarks to compare against.
-  
-* `benchmarks/`: contains the source code and data for all benchmarks
-  except for the ADBench benchmark.
-  
