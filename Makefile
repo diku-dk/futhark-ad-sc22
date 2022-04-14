@@ -34,7 +34,7 @@ tmp/rsbench-original.txt:
 
 tmp/lbm-original.txt:
 	mkdir -p tmp
-	(for i in $$(seq 10); do INCLUDE=/home/bench/futhark-ad-sc22/originals/lbm:$INCLUDE make -C originals/lbm run; done) \
+	(for i in $$(seq 10); do make -C originals/lbm run; done) \
           | awk '/Kernel/ {print $$3}' | tee $@ || rm -f $@
 
 tmp/xsbench-futhark.json:

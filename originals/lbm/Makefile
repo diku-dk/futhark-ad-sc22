@@ -2,7 +2,7 @@ CFLAGS?=-O3
 LDFLAGS?=-lOpenCL -lm
 
 lbm: main.c lbm.c ocl.c parboil_opencl.c
-	gcc -o $@ $^ $(CFLAGS) $(LDFLAGS)
+	gcc -I . -o $@ $^ $(CFLAGS) $(LDFLAGS)
 
 .PHONY: run
 
