@@ -4,7 +4,9 @@ repository contains all source code and data required to reproduce
 figures 6/7/8/9/11/12/13 in the Futhark AD submission to SC22, "AD for
 an Array Language with Nested Parallelism".
 
-The artifact is distributed as a Docker container.
+The artifact is distributed as a Docker container.  It can also be run
+without Docker, although there are many dependencies.  A section below
+describes how to do this.
 
 ## Requirements
 ### Hardware
@@ -73,6 +75,69 @@ machines.  The commands above only produce results for a single
 machine (the one you are running on).  A comparison between machines
 is not a contribution of the paper, so the artifact doesn't deal with
 it.
+
+## Running without the Docker container
+
+It is possible to run the artifact without using the Docker container,
+although it is somewhat intricate.  If any of the below seems wrong or
+confusing, you can always peruse [Dockerfile](Dockerfile) or
+[Dockerfile.amd](Dockerfile.amd) to see how the containers themselves
+are constructed.
+
+### Dependencies
+
+You need the following components:
+
+* [Git Large File Storage](https://git-lfs.github.com/) (available in
+  many package managers).
+
+* A working CUDA or OpenCL on your system.  The environment variables
+  `LIBRARY_PATH`, `LD_LIBRARY_PATH`, and `CPATH` must be set such that
+  including and linking against OpenCL/CUDA libraries works.  On most
+  systems with CUDA this means:
+
+  ```
+  $ export LIBRARY_PATH=/usr/local/cuda/lib64:$LIBRARY_PATH
+  $ export LD_LIBRARY_PATH=/usr/local/cuda/lib64/:$LD_LIBRARY_PATH
+  $ export CPATH=/usr/local/cuda/include:$CPATH
+  ```
+
+  But note that some systems installs CUDA in weird locations.
+
+* [The Nix package manager.](https://nixos.org/download.html)
+* Python 3.8 and `pip` (available in basically all package managers).
+* Several Python packages, installable with:
+
+  ```
+  $ pip3 install --upgrade torch torchvision torchaudio --extra-index-url https://download.pytorch.org/whl/cu113
+  $ pip3 install --upgrade "jax[cuda]" -f https://storage.googleapis.com/jax-releases/jax_releases.html
+  $ pip3 install futhark-data prettytable
+  ```
+
+### Preparation
+
+Clone this repository and then initialise the submodules containing
+ADBench and the Futhark compiler itself:
+
+```
+$ git lfs install # If you have not used git-lfs before.
+$ git clone https://github.com/diku-dk/futhark-ad-sc22
+$ cd futhark-ad-sc22
+$ git submodule update --init ADBench
+$ git submodule update --init futhark
+```
+
+**Optional:** recompile the Futhark compiler binary (but the included
+one works as well): `make -B bin/futhark`.
+
+### Running targets
+
+Before running, you must set the environment variable `GPU` to either
+`A100` if you have an NVIDIA GPU, or `MI100` if you have an AMD GPU.
+
+After this, you should be able to use the Makefile targets [listed
+above](https://github.com/diku-dk/futhark-ad-sc22#reproducing-individual-tables)
+to reproduce the individual tables.
 
 ## Manifest
 This section describes every top-level directory and its purpose.
