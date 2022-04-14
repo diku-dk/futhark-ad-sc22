@@ -32,6 +32,8 @@ the GitHub Container Registry:
 
     docker pull ghcr.io/diku-dk/futhark-ad-sc22:latest
     
+Note: you may need to run docker as root with `sudo`.
+    
 ### Building
 Alternatively, the container image may be built by running
 
