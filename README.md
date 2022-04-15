@@ -80,8 +80,8 @@ it.
 
 It is possible to run the artifact without using the Docker container,
 although it is somewhat intricate.  If any of the below seems wrong or
-confusing, you can always peruse [Dockerfile](Dockerfile) or
-[Dockerfile.amd](Dockerfile.amd) to see how the containers themselves
+confusing, you can always peruse [Dockerfile.cuda](Dockerfile.cuda) or
+[Dockerfile.rocm](Dockerfile.rocm) to see how the containers themselves
 are constructed.
 
 ### Dependencies
