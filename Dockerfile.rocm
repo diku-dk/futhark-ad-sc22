@@ -1,4 +1,4 @@
-FROM rocm/pytorch:rocm5.1.1_ubuntu20.04_py3.7_pytorch_1.10.0
+FROM rocm/pytorch:latest-base
 RUN apt-get update
 RUN apt-get install -y sudo git curl git-lfs vim
 RUN apt-get install -y python3 python3-pip
