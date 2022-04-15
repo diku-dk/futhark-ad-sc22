@@ -36,10 +36,12 @@ jobs:
           context: .
           push: true
           tags: ghcr.io/zfnmxt/futhark-ad-sc22:cuda
+          labels: ${{ steps.meta.outputs.labels }}
           file: Dockerfile.cuda
 
   rocm:
-    runs-on: ubuntu-20.04
+    run
+    -on: ubuntu-20.04
 
     steps:
       - name: Checkout
@@ -62,4 +64,5 @@ jobs:
           context: .
           push: true
           tags: ghcr.io/zfnmxt/futhark-ad-sc22:rocm
+          labels: ${{ steps.meta.outputs.labels }}
           file: Dockerfile.rocm
