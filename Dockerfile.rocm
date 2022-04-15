@@ -5,14 +5,16 @@ RUN apt-get install -y sudo git curl git-lfs vim
 RUN apt-get install -y python3-dev python3-pip python3-setuptools
 RUN apt-get install -y libjpeg-dev zlib1g-dev
 
-RUN echo "rocm-user ALL=(ALL) NOPASSWD:ALL" > /etc/sudoers
+#RUN echo "rocm-user ALL=(ALL) NOPASSWD:ALL" > /etc/sudoers
 USER rocm-user
+RUN [ "/bin/bash", "-c", "sh <(curl -L https://nixos.org/nix/install) --no-daemon" ]
 
+USER root
 RUN pip3 install wheel
 RUN pip3 install --upgrade torch torchvision --extra-index-url https://download.pytorch.org/whl/rocm4.5.2
 RUN pip3 install futhark-data prettytable
 
-RUN [ "/bin/bash", "-c", "sh <(curl -L https://nixos.org/nix/install) --no-daemon" ]
+#RUN [ "/bin/bash", "-c", "sh <(curl -L https://nixos.org/nix/install) --no-daemon" ]
 ENV PATH=/home/rocm-user/futhark-ad-sc22/bin:/home/rocm-user/.local/bin:/home/rocm-user/.nix-profile/bin:$PATH
 ENV GPU=MI100
 ENV PYTHON=python3
