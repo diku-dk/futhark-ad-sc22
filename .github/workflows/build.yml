@@ -14,7 +14,6 @@ env:
 jobs:
   cuda:
     runs-on: ubuntu-20.04
-    #file: {context}/Dockerfile.cuda
 
     steps:
       - name: Checkout
@@ -45,10 +44,10 @@ jobs:
           push: ${{ github.event_name != 'pull_request' }}
           tags: zfnmxt/futhark-ad-sc22:cuda
           labels: ${{ steps.meta.outputs.labels }}
+          file: Dockerfile.cuda
 
   rocm:
     runs-on: ubuntu-20.04
-    #file: {context}/Dockerfile.rocm
 
     steps:
       - name: Checkout
@@ -69,6 +68,7 @@ jobs:
         id: meta
         uses: docker/metadata-action@98669ae865ea3cffbcbaa878cf57c20bbf1c6c38
         with:
+          images: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}
           
 
       - name: Build and push Docker image
@@ -79,3 +79,4 @@ jobs:
           push: ${{ github.event_name != 'pull_request' }}
           tags: zfnmxt/futhark-ad-sc22:rocm
           labels: ${{ steps.meta.outputs.labels }}
+          file: Dockerfile.rocm
