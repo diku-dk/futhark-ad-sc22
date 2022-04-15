@@ -43,7 +43,7 @@ and for the ROCm container, run
 Note: you may need to run docker as root with `sudo`.
     
 ### Building
-Alternatively, the container image may be built by running
+Alternatively, the container images may be built by running
 
     docker build -t ghcr.io/diku-dk/futhark-ad-sc22:[cuda|rocm] .
 
@@ -56,7 +56,7 @@ The CUDA container may be run interactively with
 
     docker run --rm -it --gpus all ghcr.io/diku-dk/futhark-ad-sc22:cuda
 
-and the ROCm contaier may be run interactively with
+and the ROCm container may be run interactively with
 
     docker run --rm -it --device=/dev/kfd --device=/dev/dri --group-add video  ghcr.io/diku-dk/futhark-ad-sc22:rocm
 
@@ -128,7 +128,6 @@ You need the following components:
   $ pip3 install futhark-data prettytable
   ```
  On ROCm, with:
-
   ```
   RUN pip3 install --upgrade torch torchvision --extra-index-url https://download.pytorch.org/whl/rocm4.5.2
   RUN pip3 install futhark-data prettytable
