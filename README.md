@@ -127,7 +127,9 @@ You need the following components:
   $ pip3 install --upgrade "jax[cuda]" -f https://storage.googleapis.com/jax-releases/jax_releases.html
   $ pip3 install futhark-data prettytable
   ```
- On ROCm, with:
+  
+* On ROCm, with:
+
   ```
   RUN pip3 install --upgrade torch torchvision --extra-index-url https://download.pytorch.org/whl/rocm4.5.2
   RUN pip3 install futhark-data prettytable
