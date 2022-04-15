@@ -15,7 +15,7 @@ A section below describes how to do this.
 * A modern Nvidia GPU or AMD GPU; the benchmarks in the paper were
   peformed with an A100 and a 2080 Ti (on a few select benchmarks) on
   the Nvidia side and an MI100 on the AMD side. Most of the benchmarks
-  require large amounts of video memory (up to 30 GiB) These benchmarks
+  require large amounts of video memory (up to 30 GiB). These benchmarks
   will fail on GPUs with an insufficient amount of memory; in these
   cases the table corresponding to the benchmark will not be
   reproduced.
