@@ -12,9 +12,9 @@ env:
   IMAGE_NAME: ${{ github.repository }}
 
 jobs:
-  build-cuda:
+  cuda:
     runs-on: ubuntu-20.04
-    file: {context}/Dockerfile.cuda
+    #file: {context}/Dockerfile.cuda
 
     steps:
       - name: Checkout
@@ -46,9 +46,9 @@ jobs:
           tags: zfnmxt/futhark-ad-sc22:cuda
           labels: ${{ steps.meta.outputs.labels }}
 
-  build-rocm:
+  rocm:
     runs-on: ubuntu-20.04
-    file: {context}/Dockerfile.rocm
+    #file: {context}/Dockerfile.rocm
 
     steps:
       - name: Checkout
