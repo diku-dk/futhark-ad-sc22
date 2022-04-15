@@ -45,7 +45,7 @@ Note: you may need to run docker as root with `sudo`.
 ### Building
 Alternatively, the container images may be built by running
 
-    docker build -t ghcr.io/diku-dk/futhark-ad-sc22:[cuda|rocm] .
+    docker build -t ghcr.io/diku-dk/futhark-ad-sc22:[cuda|rocm] -f Dockerfile.[cuda|rocm] .
 
 within the root directory of this repository. Note that this will
 likely take a long time and that the Dockerfile is not deterministic;
