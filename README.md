@@ -5,16 +5,16 @@ figures 6/7/8/9/11/12/13 in the Futhark AD submission to SC22, "AD for
 an Array Language with Nested Parallelism".
 
 The artifact is distributed as two a Docker containers, one for
-running on Nvidia GPUs (CUDA) and one on AMD GPUs (ROCm). The artifact
+running on NVIDIA GPUs (CUDA) and one on AMD GPUs (ROCm). The artifact
 can also be run without Docker, although there are many dependencies.
 A section below describes how to do this.
 
 ## Requirements
 ### Hardware
 * An x86_64 CPU.
-* A modern Nvidia GPU or AMD GPU; the benchmarks in the paper were
+* A modern NVIDIA GPU or AMD GPU; the benchmarks in the paper were
   peformed with an A100 and a 2080 Ti (on a few select benchmarks) on
-  the Nvidia side and an MI100 on the AMD side. Most of the benchmarks
+  the NVIDIA side and an MI100 on the AMD side. Most of the benchmarks
   require large amounts of video memory (up to 30 GiB). These benchmarks
   will fail on GPUs with an insufficient amount of memory; in these
   cases the table corresponding to the benchmark will not be
@@ -23,10 +23,10 @@ A section below describes how to do this.
 
 ### Software
 Running the container requires an x86_64 system running a Linux
-distribution with support for Docker. For the Nvidia container, the
-Nvidia Container Toolkit is also necessary; please see Nvidia's
+distribution with support for Docker. For the NVIDIA container, the
+NVIDIA Container Toolkit is also necessary; please see NVIDIA's
 [installation
-guide](https://docs.nvidia.com/datacenter/cloud-native/container-toolkit/install-guide.html)
+guide](https://docs.NVIDIA.com/datacenter/cloud-native/container-toolkit/install-guide.html)
 for exact requirements and installation instructions.
 
 ## Setting up the Docker container
