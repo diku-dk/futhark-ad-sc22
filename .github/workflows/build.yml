@@ -35,7 +35,7 @@ jobs:
         with:
           context: .
           push: true
-          tags: ghcr.io/zfnmxt/futhark-ad-sc22:cuda
+          tags: ghcr.io/diku-dk/futhark-ad-sc22:cuda
           labels: ${{ steps.meta.outputs.labels }}
           file: Dockerfile.cuda
 
@@ -62,6 +62,6 @@ jobs:
         with:
           context: .
           push: true
-          tags: ghcr.io/zfnmxt/futhark-ad-sc22:rocm
+          tags: ghcr.io/diku-dk/futhark-ad-sc22:rocm
           labels: ${{ steps.meta.outputs.labels }}
           file: Dockerfile.rocm
