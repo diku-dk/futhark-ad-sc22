@@ -91,5 +91,5 @@ jobs:
         with:
           context: .
           push: ${{ github.event_name != 'pull_request' }}
-          tags: zfnmxt/futhark-ad-sc22:test
+          tags: zfnmxt/futhark-ad-sc22:latest
           file: Dockerfile.test
