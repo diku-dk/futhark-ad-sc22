@@ -30,11 +30,11 @@ jobs:
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: Extract Docker metadata
-        id: meta
-        uses: docker/metadata-action@98669ae865ea3cffbcbaa878cf57c20bbf1c6c38
-        with:
-          images: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}
+      #- name: Extract Docker metadata
+      #  id: meta
+      #  uses: docker/metadata-action@98669ae865ea3cffbcbaa878cf57c20bbf1c6c38
+      #  with:
+      #    images: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}
 
       - name: Build and push Docker image
         id: build-and-push
@@ -42,7 +42,8 @@ jobs:
         with:
           context: .
           push: ${{ github.event_name != 'pull_request' }}
-          tags: zfnmxt/futhark-ad-sc22:cuda
+          tags:
+            - zfnmxt/futhark-ad-sc22:cuda
           labels: ${{ steps.meta.outputs.labels }}
           file: Dockerfile.cuda
 
@@ -64,11 +65,11 @@ jobs:
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: Extract Docker metadata
-        id: meta
-        uses: docker/metadata-action@98669ae865ea3cffbcbaa878cf57c20bbf1c6c38
-        with:
-          images: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}
+      #- name: Extract Docker metadata
+      #  id: meta
+      #  uses: docker/metadata-action@98669ae865ea3cffbcbaa878cf57c20bbf1c6c38
+      #  with:
+      #    images: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}
           
 
       - name: Build and push Docker image
@@ -77,6 +78,7 @@ jobs:
         with:
           context: .
           push: ${{ github.event_name != 'pull_request' }}
-          tags: zfnmxt/futhark-ad-sc22:rocm
+          tags:
+            - zfnmxt/futhark-ad-sc22:rocm
           labels: ${{ steps.meta.outputs.labels }}
           file: Dockerfile.rocm
