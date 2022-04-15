@@ -35,7 +35,7 @@ jobs:
         with:
           context: .
           push: true
-          tags: zfnmxt/futhark-ad-sc22:cuda
+          tags: ghcr.io/zfnmxt/futhark-ad-sc22:cuda
           file: Dockerfile.cuda
 
   rocm:
@@ -61,7 +61,7 @@ jobs:
         with:
           context: .
           push: true
-          tags: zfnmxt/futhark-ad-sc22:rocm
+          tags: ghcr.io/zfnmxt/futhark-ad-sc22:rocm
           file: Dockerfile.rocm
 
   test:
@@ -87,5 +87,5 @@ jobs:
         with:
           context: .
           push: true
-          tags: zfnmxt/futhark-ad-sc22:test
+          tags: ghcr.io/zfnmxt/futhark-ad-sc22:test
           file: Dockerfile.test
