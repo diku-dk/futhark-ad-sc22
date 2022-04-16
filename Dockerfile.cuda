@@ -1,7 +1,7 @@
 FROM nvidia/cuda:11.6.1-devel-ubuntu20.04
 
 RUN apt-get update
-RUN apt-get install -y sudo git curl git-lfs vim python3-dev nvidia-opencl-dev
+RUN apt-get install -y sudo git curl git-lfs vim python3 python3-pip  nvidia-opencl-dev
 
 RUN adduser --gecos '' --disabled-password bench
 RUN echo "bench ALL=(ALL) NOPASSWD:ALL" > /etc/sudoers
