@@ -1,26 +1,18 @@
-FROM rocm/rocm-terminal
+FROM rocm/rocm-terminal:5.0.1
 
 USER root
 RUN apt-get update
-RUN apt-get install -y sudo git curl git-lfs vim
-RUN apt-get install -y python3-dev 
-RUN apt-get install -y libjpeg-dev zlib1g-dev
-RUN pip3 install wheel setuptools scipy futhark-data prettytable
-RUN pip3 install torch torchvision==0.11.1 -f https://download.pytorch.org/whl/rocm4.2/torch_stable.html
-
+RUN apt-get install -y sudo git curl git-lfs vim python3.8-dev libjpeg-dev zlib1g-dev
+RUN python3.8 -m pip install pip --upgrade
+RUN python3.8 -m pip install wheel setuptools
+RUN python3.8 -m pip install numpy scipy futhark-data prettytable
+RUN python3.8 -m pip install torch torchvision==0.11.1 -f https://download.pytorch.org/whl/rocm4.2/torch_stable.html
 
 RUN adduser --gecos '' --disabled-password bench
 RUN echo "bench ALL=(ALL) NOPASSWD:ALL" > /etc/sudoers
 USER bench
 RUN [ "/bin/bash", "-c", "sh <(curl -L https://nixos.org/nix/install) --no-daemon" ]
 ENV PATH=/home/bench/futhark-ad-sc22/bin:/home/bench/.local/bin:/home/bench/.nix-profile/bin:$PATH
-ENV GPU=MI100
-ENV PYTHON=python3
-ENV CPATH=/opt/rocm/include:/opt/rocm/opencl/include
-ENV C_INCLUDE_PATH=/opt/rocm/include:/opt/rocm/opencl/include
-ENV LIBRARY_PATH=/opt/rocm/lib:/opt/rocm/opencl/lib
-ENV LD_LIBRARY_PATH=/opt/rocm/lib:/opt/rocm/opencl/lib
-ENV CPLUS_INCLUDE_PATH=/opt/rocm/include:/opt/rocm/opencl/lib
 RUN git lfs install
 WORKDIR /home/bench/
 RUN git clone https://github.com/diku-dk/futhark-ad-sc22
@@ -32,7 +24,7 @@ RUN make -B bin/futhark
 USER root
 ENV PATH=/home/bench/futhark-ad-sc22/bin:/home/bench/.local/bin:/home/bench/.nix-profile/bin:$PATH
 ENV GPU=MI100
-ENV PYTHON=python3
+ENV PYTHON=python3.8
 ENV CPATH=/opt/rocm/include:/opt/rocm/opencl/include
 ENV C_INCLUDE_PATH=/opt/rocm/include:/opt/rocm/opencl/include
 ENV LIBRARY_PATH=/opt/rocm/lib:/opt/rocm/opencl/lib
