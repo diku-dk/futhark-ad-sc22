@@ -177,7 +177,7 @@ def ml(f, d, k1, k2):
     try:
         return f'{f(d[k1][k2])}'
     except KeyError:
-        return "\\varnothing"
+        return "-"
 
 
 def table(name, res):

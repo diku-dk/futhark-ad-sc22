@@ -5,6 +5,7 @@ ifeq ($(GPU), A100)
 	FUTHARK_TUNING=--tuning=.tuning.a100
 	FUTHARK_TILE_SIZE=16
 	FUTHARK_REG_TILE=4
+        JAX=TRUE
 else  ifeq ($(GPU), MI100)
 	FUTHARK_TUNING=--tuning=.tuning.mi100
 	FUTHARK_TILE_SIZE=16
@@ -19,7 +20,7 @@ endif
 
 .PHONY: results data
 
-results: data lstm.json lstm_pytorch.json $(ifneq ($(GPU), MI100), lstm_jax.json)
+results: data lstm.json lstm_pytorch.json $(if $(JAX),lstm_jax.json)
 	make gen_results
 
 data:
