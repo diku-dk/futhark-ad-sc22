@@ -115,10 +115,8 @@ You need the following components:
   $ export LD_LIBRARY_PATH=/usr/local/cuda/lib64/:$LD_LIBRARY_PATH
   $ export CPATH=/usr/local/cuda/include:$CPATH
   ```
-
-  But note that some systems installs CUDA in weird locations. On ROCm,
+  (Note that some systems installs CUDA in weird locations.) On ROCm,
   this means:
-  
   ```
   $ export CPATH=/opt/rocm/include:/opt/rocm/opencl/include:$CPATH
   $ export C_INCLUDE_PATH=/opt/rocm/include:/opt/rocm/opencl/include:$C_INCLUDE_PATH
