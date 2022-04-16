@@ -6,7 +6,7 @@ FUTHARK_BENCH_OPTIONS=
 
 .PHONY: results data
 
-results: data kmeans.json kmeans_pytorch.json kmeans_manual.json kmeans_jax.json
+results: data kmeans.json kmeans_pytorch.json kmeans_manual.json $(ifneq ($(GPU), MI100), kmean_jax.json)
 	make gen_results
 
 data:
