@@ -116,24 +116,33 @@ You need the following components:
   $ export CPATH=/usr/local/cuda/include:$CPATH
   ```
 
-  But note that some systems installs CUDA in weird locations.
+  But note that some systems installs CUDA in weird locations. On ROCm,
+  this means:
+  
+  ```
+  $ export CPATH=/opt/rocm/include:/opt/rocm/opencl/include:$CPATH
+  $ export C_INCLUDE_PATH=/opt/rocm/include:/opt/rocm/opencl/include:$C_INCLUDE_PATH
+  $ export LIBRARY_PATH=/opt/rocm/lib:/opt/rocm/opencl/lib:$LIBRARY_PATH
+  $ export LD_LIBRARY_PATH=/opt/rocm/lib:/opt/rocm/opencl/lib:$LD_LIBRARY_PATH
+  $ export CPLUS_INCLUDE_PATH=/opt/rocm/include:/opt/rocm/opencl/lib:$CPLUS_INCLUDE_PATH
+  ```
 
 * [The Nix package manager.](https://nixos.org/download.html)
 * Python 3.8 and `pip` (available in basically all package managers).
 * Several Python packages. On CUDA, these are installable with:
 
   ```
-  $ pip3 install --upgrade torch torchvision torchaudio --extra-index-url https://download.pytorch.org/whl/cu113
-  $ pip3 install --upgrade "jax[cuda]" -f https://storage.googleapis.com/jax-releases/jax_releases.html
+  $ pip3 install --upgrade torch==1.11.0+cu113 --extra-index-url https://download.pytorch.org/whl/cu113
+  $ pip3 install --upgrade "jax[cuda]==0.3.4" -f https://storage.googleapis.com/jax-releases/jax_releases.html
   $ pip3 install futhark-data prettytable
   ```
   
 * On ROCm, with:
 
   ```
-  RUN pip3 install --upgrade torch torchvision --extra-index-url https://download.pytorch.org/whl/rocm4.5.2
-  RUN pip3 install futhark-data prettytable
-   ```
+  $ pip3 install numpy==1.22.3 scipy==1.8.0 futhark-data prettytable
+  $ pip3 install torch==1.11.0 -f https://download.pytorch.org/whl/rocm4.2/torch_stable.html
+  ```
 
 ### Preparation
 
@@ -158,6 +167,13 @@ Before running, you must set the environment variable `GPU` to either
 
 ```
 export GPU=[A100|MI100]
+```
+
+You must also set the `PYTHON` environment variable to point to
+your python binary:
+
+```
+export PYTHON=python3.8
 ```
 
 After this, you should be able to use the Makefile targets [listed
