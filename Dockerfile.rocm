@@ -12,6 +12,14 @@ RUN adduser --gecos '' --disabled-password bench
 RUN echo "bench ALL=(ALL) NOPASSWD:ALL" > /etc/sudoers
 USER bench
 RUN [ "/bin/bash", "-c", "sh <(curl -L https://nixos.org/nix/install) --no-daemon" ]
+ENV PATH=/home/bench/futhark-ad-sc22/bin:/home/bench/.local/bin:/home/bench/.nix-profile/bin:$PATH
+ENV GPU=MI100
+ENV PYTHON=python3
+ENV CPATH=/opt/rocm/include:/opt/rocm/opencl/include
+ENV C_INCLUDE_PATH=/opt/rocm/include:/opt/rocm/opencl/include
+ENV LIBRARY_PATH=/opt/rocm/lib:/opt/rocm/opencl/lib
+ENV LD_LIBRARY_PATH=/opt/rocm/lib:/opt/rocm/opencl/lib
+ENV CPLUS_INCLUDE_PATH=/opt/rocm/include:/opt/rocm/opencl/lib
 RUN git lfs install
 WORKDIR /home/bench/
 RUN git clone https://github.com/diku-dk/futhark-ad-sc22
