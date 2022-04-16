@@ -1,6 +1,6 @@
 -- ==
 -- entry: calculate_objective
--- input @ data/kdd_cup.in.gz output @ data/kdd_cup.out
+-- input @ data/kdd_cup.in.gz
 -- input @ data/random.in.gz
 
 -- ==

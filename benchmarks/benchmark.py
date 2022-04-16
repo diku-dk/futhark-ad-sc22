@@ -58,7 +58,6 @@ class Benchmark(ABC):
         self.prepare()
         self.time_objective()
         self.time_jacobian()
-        self.validate()
 
     def report(self):
         return {
