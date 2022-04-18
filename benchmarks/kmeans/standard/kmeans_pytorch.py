@@ -8,6 +8,7 @@ import numpy as np
 import torch
 from benchmark import Benchmark, set_precision
 from torch.autograd.functional import vhp, vjp
+import os
 
 data_dir = Path(__file__).parent / "data"
 os.environ["PYTORCH_HIP_ALLOC_CONF"] = "max_split_size_mb:1000"

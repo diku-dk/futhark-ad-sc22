@@ -9,6 +9,6 @@ endif
 
 .PHONY: results
 
-results: kmeans_sparse.json kmeans_sparse_pytorch.json kmeans_sparse_manual.json $(if $(JAX),kmean_sparse_jax.json)
+results: kmeans_sparse.json kmeans_sparse_pytorch.json kmeans_sparse_manual.json $(if $(JAX),kmeans_sparse_jax.json)
 	make gen_results
 

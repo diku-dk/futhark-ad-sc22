@@ -10,7 +10,7 @@ endif
 
 .PHONY: results data
 
-results: data kmeans.json kmeans_pytorch.json kmeans_manual.json $(if $(JAX),kmean_jax.json)
+results: data kmeans.json kmeans_pytorch.json kmeans_manual.json $(if $(JAX),kmeans_jax.json)
 	make gen_results
 
 data:

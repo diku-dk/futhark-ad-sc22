@@ -1,3 +1,9 @@
+ifeq ($(GPU), MI100)
+	FUTHARK_BACKEND=opencl
+else
+	FUTHARK_BACKEND=cuda
+endif
+
 figure_6:
 	nix-shell --pure --run ./setup-adbench.sh
 	nix-shell --pure --run ./run-adbench.sh
@@ -38,13 +44,13 @@ tmp/lbm-original.txt:
           | awk '/Kernel/ {print $$3}' | tee $@ || rm -f $@
 
 tmp/xsbench-futhark.json:
-	bin/futhark bench --backend opencl benchmarks/xsbench/xsbench.fut --json $@
+	bin/futhark bench --backend $(FUTHARK_BACKEND) benchmarks/xsbench/xsbench.fut --json $@
 
 tmp/rsbench-futhark.json:
-	bin/futhark bench --backend opencl benchmarks/rsbench/rsbench.fut --json $@
+	bin/futhark bench --backend $(FUTHARK_BACKEND) benchmarks/rsbench/rsbench.fut --json $@
 
 tmp/lbm-futhark.json:
-	bin/futhark bench --backend opencl benchmarks/lbm/lbm.fut --json $@
+	bin/futhark bench --backend $(FUTHARK_BACKEND) benchmarks/lbm/lbm.fut --json $@
 
 bin/futhark:
 	cd futhark && nix-build --argstr suffix ad
