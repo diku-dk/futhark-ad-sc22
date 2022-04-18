@@ -6,7 +6,7 @@ RUN apt-get install -y sudo git curl git-lfs vim python3.8-dev libjpeg-dev zlib1
 RUN python3.8 -m pip install pip --upgrade
 RUN python3.8 -m pip install wheel setuptools
 RUN python3.8 -m pip install numpy==1.22.3 scipy==1.8.0  futhark-data prettytable
-RUN python3.8 -m pip install torch==1.11.0+rocm4.5.2 --extra-index-url https://download.pytorch.org/whl/rocm4.5.2
+RUN python3.8 -m pip install torch==1.10.2+rocm4.2 --extra-index-url https://download.pytorch.org/whl/rocm4.2
 
 RUN adduser --gecos '' --disabled-password bench
 RUN echo "bench ALL=(ALL) NOPASSWD:ALL" > /etc/sudoers

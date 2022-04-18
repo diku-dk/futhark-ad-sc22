@@ -216,7 +216,7 @@ void OpenCL_initialize(OpenCL_Param* prm)
         CHECK_ERROR("clCreateProgramWithSource")
 
         char clOptions[100];
-        sprintf(clOptions,"-I src/opencl_nvidia");
+        sprintf(clOptions,"-I.");
 
         clStatus = clBuildProgram(prm->clProgram,1,&(prm->clDevice),clOptions,NULL,NULL);
         CHECK_ERROR("clBuildProgram")

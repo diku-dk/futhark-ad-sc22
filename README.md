@@ -86,10 +86,6 @@ machine (the one you are running on).  A comparison between machines
 is not a contribution of the paper, so the artifact doesn't deal with
 it.
 
-Note: Only figures 8,9, and 11 and 12 are supported on the ROCm
-container.  Constructing the other figures on the ROCm container has
-undefined behavior.
-
 ## Running without the Docker container
 
 It is possible to run the artifact without using the Docker container,
