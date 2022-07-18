@@ -1,0 +1,25 @@
+cff-version: 1.2.0
+title: futhark-ad-sc22
+message: 'If you use this software, please cite it as below.'
+type: software
+authors:
+  - given-names: Robert
+    family-names: Schenck
+    email: r@bert.lol
+    affiliation: 'DIKU, University of Copenhagen'
+    orcid: 'https://orcid.org/0000-0001-5848-8166'
+  - given-names: Ola
+    family-names: Rønning
+    email: ola@di.ku.dk
+    affiliation: 'DIKU, University of Copenhagen'
+    orcid: 'https://orcid.org/0000-0002-1655-4986'
+  - given-names: Troels
+    family-names: Henriksen
+    email: athas@sigkill.dk
+    orcid: 'https://orcid.org/0000-0002-1195-9722'
+    affiliation: 'DIKU, University of Copenhagen'
+  - given-names: Cosmin
+    family-names: E. Oancea
+    email: cosmin.oancea@diku.dk
+    affiliation: 'DIKU, University of Copenhagen'
+    orcid: 'https://orcid.org/0000-0001-5421-6876'
