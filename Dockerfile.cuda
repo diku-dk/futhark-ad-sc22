@@ -8,7 +8,7 @@ RUN echo "bench ALL=(ALL) NOPASSWD:ALL" > /etc/sudoers
 USER bench
 
 RUN pip3 install --upgrade torch==1.11.0+cu113 --extra-index-url https://download.pytorch.org/whl/cu113
-RUN pip3 install --upgrade "jax[cuda]==0.3.4" -f https://storage.googleapis.com/jax-releases/jax_releases.html
+RUN pip3 install --upgrade "jax[cuda]==0.3.4" -f https://storage.googleapis.com/jax-releases/jax_cuda_releases.html
 RUN pip3 install futhark-data prettytable
 
 RUN [ "/bin/bash", "-c", "sh <(curl -L https://nixos.org/nix/install) --no-daemon" ]
